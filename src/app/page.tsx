@@ -7,8 +7,8 @@ export default function Home() {
     <main>
       <h1>Companion.ai</h1>
       <p>The AI Companion who can detect your emotions</p>
-      <button>register</button>
-      <button>login</button>
+      <Link href="/register">Register</Link>
+      <Link href="/login">Log in</Link>
     </main>
   );
 }
