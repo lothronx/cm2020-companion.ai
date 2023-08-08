@@ -2,7 +2,8 @@
 
 import pymongo
 from pymongo.errors import DuplicateKeyError
-
+import uuid
+from datetime import datetime
 
 # Replace with your MongoDB Atlas connection string
 MONGO_URI = "mongodb+srv://databasemain:123@asp-project.xy7kyod.mongodb.net/?retryWrites=true&w=majority"
@@ -22,7 +23,7 @@ def test_connection():
         return False
 
 
-## Fucntions Relating to User Database 
+## Functions Relating to User Database 
 def insert_user(username, email, password_hashed):
     users = db['users']
     try:
@@ -62,106 +63,94 @@ def fetch_user(criteria):
 
 ## Functions Relating Companion Database 
 
-def create_companion(user_id, friendliness, humor_level, specific_interests):
-    chat_settings = db['chat_settings']
+def create_companion(user_id,companion_name, friendliness, humor_level, specific_interests):
+
+    companion_id = str(uuid.uuid4())  # Generate a unique companion_id
+
+    chat_settings = db['companion_settings']
     chat_settings.insert_one({
         'user_id': user_id,
+        'companion_id': companion_id,
+        'companion_name': companion_name,
         'friendliness': friendliness,
         'humor_level': humor_level,
         'specific_interests': specific_interests
     })
 
 
-## Functions Relating Chat Session Database 
+def list_all_companion_names():
+    companion_settings = db['companion_settings']
+    
+    # Using list comprehension to get all companion names from the collection
+    companion_names = [doc['companion_name'] for doc in companion_settings.find() if 'companion_name' in doc]
+    
+    return companion_names
 
-def insert_chat_session(user_id, creation_time):
-    chat_sessions = db['chat_sessions']
-    return chat_sessions.insert_one({
-        'user_id': user_id,
-        'creation_time': creation_time
-    }).inserted_id
+# names = list_all_companion_names()
+# if names:
+#     print("All companion names:", ', '.join(names))
+# else:
+#     print("No companions found.")
 
 
 ## Functions Relating Messages Database 
 
-def insert_messages(chat_id, messages_list):
+def current_timestamp():
+    """Returns the current timestamp in the desired format."""
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+def insert_ai_message(user_id, companion_id, message_content):
+    """Insert a message from the AI into the messages collection."""
     messages = db['messages']
-    messages.insert_many(messages_list)
+    message_data = {
+        'user_id': user_id,
+        'companion_id': companion_id,
+        'sender': 'AI',
+        'timestamp': current_timestamp(),
+        'message_content': message_content
+    }
+    return messages.insert_one(message_data).inserted_id
+
+def insert_user_message(user_id, companion_id, message_content):
+    """Insert a message from the User into the messages collection."""
+    messages = db['messages']
+    message_data = {
+        'user_id': user_id,
+        'companion_id': companion_id,
+        'sender': 'User',
+        'timestamp': current_timestamp(),
+        'message_content': message_content
+    }
+    return messages.insert_one(message_data).inserted_id
+
+# Example usage:
+# insert_ai_message(user_id="some_user_id", companion_id="some_companion_id", 
+#                   message_content="Hello, I'm the AI!")
+
+# insert_user_message(user_id="some_user_id", companion_id="some_companion_id", 
+#                     message_content="Hello, how are you?")
+
+
+def get_messages(user_id, companion_id):
+    """Retrieve all messages for a specific user_id and companion_id."""
+    messages = db['messages']
+    # Find messages based on user_id and companion_id
+    results = messages.find({
+        'user_id': user_id,
+        'companion_id': companion_id
+    })
+    # Extracting message content from the results
+    message_contents = [message['message_content'] for message in results]
+    return message_contents
+
+# Example usage:
+# messages_list = get_messages(user_id="some_user_id", companion_id="some_companion_id")
+# for msg in messages_list:
+#     print(msg)
 
 
 if __name__ == "__main__":
     # This code only runs if you execute this file directly, not if you import it
     test_connection()
 
-    # user_id = insert_user('User1', 'user1@gmail.com', 'hashed_password1')
-
-    # create_companion(user_id, 7, 5, ['Music', 'Technology'])
-
-    # chat_id = insert_chat_session(user_id, '2023-08-04T09:00:00')
-
-    # insert_messages(chat_id, [
-    #     {
-    #         'chat_id': chat_id,
-    #         'sender': 'User',
-    #         'timestamp': '2023-08-04T09:01:00',
-    #         'message_content': 'Hello, how are you?'
-    #     },
-    #     {
-    #         'chat_id': chat_id,
-    #         'sender': 'AI',
-    #         'timestamp': '2023-08-04T09:01:10',
-    #         'message_content': "Hello, I'm doing well. How about you?"
-    #     }
-    # ])
-
-    # messages = db['messages']
-    # print(messages.find_one({'sender': 'AI'}))
-
-# Assuming 'client' and 'db' are already defined
-# user_schema = {
-#     "$jsonSchema": {
-#         "bsonType": "object",
-#         "required": ["email", "username"],
-#         "properties": {
-#             "email": {
-#                 "bsonType": "string",
-#                 "description": "must be a string and is required",
-#                 "pattern": "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"  # Basic regex for email
-#             },
-#             "username": {
-#                 "bsonType": "string",
-#                 "description": "must be a string and is required",
-#                 "minLength": 3,
-#                 "maxLength": 50
-#             }
-#         }
-#     }
-# }
-
-# # Add the collection schema
-
-# db.create_collection("users", validator=user_schema)
-
-# users = db['users']
-# users.create_index("email", unique=True)
-# users.create_index("username", unique=True)
-
-# print("Collection 'users' created with schema and unique indexes!")
-
-
-# users = db['users']
-
-# # Add a trial user
-# trial_user = {
-#     "email": "trialuser@example.com",
-#     "username": "trialuser",
-#     "password": "hashed_trial_password"  # Remember to hash passwords before inserting
-# }
-
-# try:
-#     result = users.insert_one(trial_user)
-#     print(f"Inserted trial user with ID: {result.inserted_id}")
-# except pymongo.errors.DuplicateKeyError:
-#     print("A user with the same email or username already exists!")
-# except Exception as e:
-#     print(f"An error occurred: {e}")
+   
