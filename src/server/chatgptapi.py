@@ -1,4 +1,7 @@
 import openai
+from mongodbsetup import insert_user_message, insert_ai_message, get_messages
+
+
 
 api_key = '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'  
 
@@ -32,20 +35,34 @@ if validate_connection(api_key):
 else:
     print("Connection failed!")
 
-
-messages = [{"role": "system", "content": "You are an AI Powered Love Assistant"}]
-
-
 ## Base Code I have run before 
-def CustomChatGPT(user_input):
-    messages.append({"role": "user", "content": user_input})
+# def CustomChatGPT(user_input):
+#     messages.append({"role": "user", "content": user_input})
+#     response = openai.ChatCompletion.create(
+#         model = "gpt-3.5-turbo",
+#         messages = messages
+#     )
+#     ChatGPT_reply = response["choices"][0]["message"]["content"]
+#     messages.append({"role": "assistant", "content": ChatGPT_reply})
+#     return ChatGPT_reply
+
+
+def CustomChatGPT(user_id, companion_id, user_input):
+    # Add user's message to the database
+    insert_user_message(user_id, companion_id, user_input)
+
+    # Get a reply from ChatGPT
     response = openai.ChatCompletion.create(
-        model = "gpt-3.5-turbo",
-        messages = messages
+        model="gpt-3.5-turbo",
+        messages=[{"role": "system", "content": "You are an AI Powered Love Assistant"}, {"role": "user", "content": user_input}]
     )
     ChatGPT_reply = response["choices"][0]["message"]["content"]
-    messages.append({"role": "assistant", "content": ChatGPT_reply})
+
+    # Add assistant's reply to the database
+    insert_ai_message(user_id, companion_id, ChatGPT_reply)
+
     return ChatGPT_reply
+
 
 
 if __name__ == "__main__":
