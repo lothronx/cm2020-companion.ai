@@ -6,14 +6,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // form validation schema using zod
-const schema = z
-  .object({
-    username: z.string().min(1, "Username is required").max(128, "Username is too long"),
-    password: z
-      .string()
-      .min(6, "Password must be at least 6 characters long")
-      .max(256, "Password is too long"),
-  })
+const schema = z.object({
+  username: z.string().min(1, "Username is required").max(128, "Username is too long"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .max(256, "Password is too long"),
+});
+
 // infer the type from the schema
 type schemaType = z.infer<typeof schema>;
 
