@@ -37,13 +37,16 @@ def insert_user(username, email, password_hashed):
         print("Username or email already exists!")
         return None
 
+
 def login(email, password_hashed):
     users = db['users']
     user = users.find_one({'email': email, 'password': password_hashed})
     if user:
-        return True, user
+        user_id = str(user['_id'])  # Convert ObjectId to its string representation
+        return True, user_id
     else:
         return False, None
+
 
 def update_user(user_id, new_data):
     users = db['users']
@@ -75,7 +78,11 @@ def create_companion(user_id,companion_name, friendliness, humor_level, specific
         'friendliness': friendliness,
         'humor_level': humor_level,
         'specific_interests': specific_interests
-    })
+    }
+    )
+
+    return companion_id
+
 
 
 def list_all_companion_names():
