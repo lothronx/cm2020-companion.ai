@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from companion import Companion
-from emojify import Emoji
+from emojify2 import Emoji
 
 # __name__ is equal to app.py
 app = Flask(__name__)
@@ -10,7 +10,7 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route("/", methods=['POST'])
+@app.route("/chat", methods=['POST'])
 def chat():
     #TODO get question
     question = None
@@ -19,15 +19,15 @@ def chat():
     return render_template("index.html", result=response)
 
 
-@app.route("/", methods=['POST'])
+@app.route("/emojify", methods=['POST'])
 def emojify():
     #TODO
     # 1) get statement
     statement = None
     # 2) query emojify
     # 3) return emoji
-    emo = Emoji()
-    emoji = emo.emojify(statement)
+    emoji_client = Emoji()
+    emoji = emoji_client.emojify(statement)
     return render_template("index.html", result=emoji)
 
 if __name__ == "__main__":
