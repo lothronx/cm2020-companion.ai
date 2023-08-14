@@ -4,10 +4,11 @@ import axios, { CanceledError } from "axios";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
-import { MdOutlineArrowBackIosNew, MdArrowCircleUp } from "react-icons/md";
+import { MdOutlineArrowBackIos, MdArrowCircleUp } from "react-icons/md";
 import { AiOutlineRobot } from "react-icons/ai";
 
 export default function Chat() {
+  // useState
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
@@ -16,6 +17,7 @@ export default function Chat() {
     { text: "I'm doing great too!", isUser: false },
   ]);
 
+  // useForm
   const {
     register,
     handleSubmit,
@@ -23,6 +25,7 @@ export default function Chat() {
     formState: { isSubmitting },
   } = useForm<{ message: string }>();
 
+  // useEffect
   useEffect(() => {
     const controller = new AbortController();
 
@@ -44,6 +47,7 @@ export default function Chat() {
     };
   }, []);
 
+  // onSubmit
   const onSubmit: SubmitHandler<{ message: string }> = (data) => {
     setMessages((messages) => [...messages, { text: data.message, isUser: true }]);
   };
@@ -52,7 +56,7 @@ export default function Chat() {
     <>
       <header>
         <Link href="/settings">
-          <MdOutlineArrowBackIosNew />
+          <MdOutlineArrowBackIos />
         </Link>
         <AiOutlineRobot />
         <p>Compaion.ai</p>
