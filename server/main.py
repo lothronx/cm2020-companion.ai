@@ -59,7 +59,7 @@ def create_user_route():
 @app.route("/api/login", methods=["POST"])
 def login_route():
     data = request.get_json()
-    print("i sent back", data)
+
     email = data["email"]
     password = data["password"]
 

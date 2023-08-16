@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 
 // form validation schema using zod
 const schema = z.object({
-  email: z.string().min(1, "Email is required").max(128, "The email you entered is too long"),
+  email: z.string().email(),
   password: z
     .string()
     .min(1, "Password is required")
@@ -23,7 +23,6 @@ type schemaType = z.infer<typeof schema>;
  */
 export default function Login() {
   const { data: session } = useSession();
-
   if (session && session.user) {
     redirect("/chat");
   }
