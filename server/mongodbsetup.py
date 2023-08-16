@@ -24,28 +24,36 @@ def test_connection():
 
 
 ## Functions Relating to User Database 
-def insert_user(username, email, password_hashed):
+def insert_user(username, email, password):  # Note the change in parameter name
     users = db['users']
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     try:
         result = users.insert_one({
             'username': username,
             'email': email,
-            'password': password_hashed
+            'password': hashed_password.decode('utf-8')  # Store the hashed password as a string
         })
         return result.inserted_id
     except DuplicateKeyError:
         print("Username or email already exists!")
         return None
+    
 
-
-def login(email, password_hashed):
+def login(email, password):
     users = db['users']
-    user = users.find_one({'email': email, 'password': password_hashed})
+    user = users.find_one({'email': email})
     if user:
-        user_id = str(user['_id'])  # Convert ObjectId to its string representation
-        return True, user_id
+
+        # Check if the provided password, when hashed, matches the stored hashed password
+        if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+            user_id = str(user['_id'])  # Convert ObjectId to its string representation
+            return True, user_id
+        else:
+            return False, None
     else:
         return False, None
+
 
 
 def update_user(user_id, new_data):
