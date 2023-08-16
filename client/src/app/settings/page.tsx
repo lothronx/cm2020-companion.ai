@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 export default function Settings() {
+  const { data: session } = useSession();
+  if (!session || !session.user) {
+    redirect("/");
+  }
+
   const [isAPIModalOpen, setIsAPIModalOpen] = useState(false);
   const [apiKey, setApiKey] = useState("");
 
@@ -31,16 +38,16 @@ export default function Settings() {
             <Link href="mailto:companionai@gmail.com">Contact Us</Link>
           </li>
           <li>
-            <button>Sign out</button>
+            <button onClick={() => signOut()}>Sign out</button>
           </li>
         </ul>
       </main>
-
       <footer>
         Companion.ai is powered by OpenAI. <br />
         Everything AI says is not real.
       </footer>
 
+      {/* The Open API Modal*/}
       {isAPIModalOpen && (
         <div>
           <div>

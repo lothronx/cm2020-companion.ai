@@ -1,17 +1,21 @@
 "use client";
-
-import Link from "next/link";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { signIn, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 // form validation schema using zod
 const schema = z.object({
-  username: z.string().min(1, "Username is required").max(128, "Username is too long"),
+  username: z
+    .string()
+    .min(1, "Username is required")
+    .max(128, "The username you entered is too long"),
   password: z
     .string()
-    .min(6, "Password must be at least 6 characters long")
-    .max(256, "Password is too long"),
+    .min(1, "Password is required")
+    .max(256, "The password you entered is too long"),
 });
 
 // infer the type from the schema
@@ -19,9 +23,14 @@ type schemaType = z.infer<typeof schema>;
 
 /**
  * Login page
- * @returns {JSX.Element} Login page
  */
 export default function Login() {
+  const { data: session } = useSession();
+
+  if (session && session.user) {
+    redirect("/chat");
+  }
+
   // use react-hook-form to handle form state
   const {
     register,
@@ -32,8 +41,14 @@ export default function Login() {
   });
 
   // handle form submission
-  const onSubmit: SubmitHandler<schemaType> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<schemaType> = async (data) => {
+    // hash the password
+    await signIn("credentials", {
+      username: data.username,
+      password: data.password,
+      redirect: true,
+      callbackUrl: "/chat",
+    });
   };
 
   return (

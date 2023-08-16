@@ -4,6 +4,8 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 // form validation schema using zod
 const schema = z
@@ -26,9 +28,14 @@ type schemaType = z.infer<typeof schema>;
 
 /**
  * Register page
- * @returns {JSX.Element} Register page
  */
 export default function Register() {
+  const { data: session } = useSession();
+
+  if (session && session.user) {
+    redirect("/chat");
+  }
+
   // use react-hook-form to handle form state
   const {
     register,
@@ -39,8 +46,26 @@ export default function Register() {
   });
 
   // handle form submission
-  const onSubmit: SubmitHandler<schemaType> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<schemaType> = async (data) => {
+    const res = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => res.json());
+
+    if (res.error) {
+      console.log(res.error);
+      return;
+    }
+
+    await signIn("credentials", {
+      username: data.username,
+      password: data.password,
+      redirect: true,
+      callbackUrl: "/chat",
+    });
   };
 
   return (
