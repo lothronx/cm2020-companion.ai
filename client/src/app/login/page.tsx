@@ -8,10 +8,7 @@ import { redirect } from "next/navigation";
 
 // form validation schema using zod
 const schema = z.object({
-  username: z
-    .string()
-    .min(1, "Username is required")
-    .max(128, "The username you entered is too long"),
+  email: z.string().min(1, "Email is required").max(128, "The email you entered is too long"),
   password: z
     .string()
     .min(1, "Password is required")
@@ -44,7 +41,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<schemaType> = async (data) => {
     // hash the password
     await signIn("credentials", {
-      username: data.username,
+      email: data.email,
       password: data.password,
       redirect: true,
       callbackUrl: "/chat",
@@ -56,9 +53,9 @@ export default function Login() {
       <h1>Welcome back to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="username">Username</label>
-          <input {...register("username")} type="text" name="username" id="username" />
-          {errors.username && <p>{errors.username.message}</p>}
+          <label htmlFor="email">Email</label>
+          <input {...register("email")} type="text" name="email" id="email" />
+          {errors.email && <p>{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="password">Password</label>

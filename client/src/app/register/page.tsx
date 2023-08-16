@@ -47,7 +47,7 @@ export default function Register() {
 
   // handle form submission
   const onSubmit: SubmitHandler<schemaType> = async (data) => {
-    const res = await fetch("http://localhost:5000/api/register", {
+    const res = await fetch("http://127.0.0.1:5000/api/new_user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export default function Register() {
     }
 
     await signIn("credentials", {
-      username: data.username,
+      email: data.email,
       password: data.password,
       redirect: true,
       callbackUrl: "/chat",

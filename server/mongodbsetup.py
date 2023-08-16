@@ -4,6 +4,7 @@ import pymongo
 from pymongo.errors import DuplicateKeyError
 import uuid
 from datetime import datetime
+import bcrypt
 
 # Replace with your MongoDB Atlas connection string
 MONGO_URI = "mongodb+srv://databasemain:123@asp-project.xy7kyod.mongodb.net/?retryWrites=true&w=majority"
