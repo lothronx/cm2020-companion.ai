@@ -73,7 +73,7 @@ def login_route():
         )
 
 
-@app.route("/test", methods=["GET"])
+@app.route("/", methods=["GET"])
 def home():
     return "It's working", 200
 

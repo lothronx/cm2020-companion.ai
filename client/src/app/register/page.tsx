@@ -6,8 +6,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { useState } from "react";
 
-// form validation schema using zod
+// form validation schema
 const schema = z
   .object({
     username: z.string().min(1, "Username is required").max(128, "Username is too long"),
@@ -30,13 +31,13 @@ type schemaType = z.infer<typeof schema>;
  * Register page
  */
 export default function Register() {
+  // if the user is already logged in, redirect to the chat page
   const { data: session } = useSession();
-
   if (session && session.user) {
     redirect("/chat");
   }
 
-  // use react-hook-form to handle form state
+  // handle form state
   const {
     register,
     handleSubmit,
@@ -46,6 +47,7 @@ export default function Register() {
   });
 
   // handle form submission
+  const [registerErr, setRegisterErr] = useState("");
   const onSubmit: SubmitHandler<schemaType> = async (data) => {
     const res = await fetch("http://127.0.0.1:5000/api/new_user", {
       method: "POST",
@@ -55,8 +57,8 @@ export default function Register() {
       body: JSON.stringify(data),
     }).then((res) => res.json());
 
-    if (res.error) {
-      console.log(res.error);
+    if (res.message) {
+      setRegisterErr(res.message);
       return;
     }
 
@@ -97,6 +99,7 @@ export default function Register() {
           />
           {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
         </div>
+        {registerErr && <p>{registerErr}</p>}
         <button type="submit" disabled={isSubmitting}>
           Sign up
         </button>
