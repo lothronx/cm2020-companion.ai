@@ -47,9 +47,7 @@ def create_user_route():
     else:
         return (
             jsonify(
-                {
-                    "message": "User creation failed! Username or email might already exist."
-                }
+                {"message": "Unable to register. Username or email already exists."}
             ),
             400,
         )
@@ -72,6 +70,12 @@ def login_route():
             401,
         )
 
+# Set OpenAI API Route
+# TODO: Implement this route
+@app.route("/api/settings/openapi", methods=["POST"])
+def settings_openapi_route():
+    data = request.get_json()
+    return jsonify({"status": "success"}), 200
 
 @app.route("/", methods=["GET"])
 def home():

@@ -1,22 +1,31 @@
 "use client";
 
-import Link from "next/link";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn, useSession } from "next-auth/react";
+
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { signIn, useSession } from "next-auth/react";
 
 // form validation schema
 const schema = z
   .object({
-    username: z.string().min(1, "Username is required").max(128, "Username is too long"),
+    username: z
+      .string()
+      .min(4, "Username must be at least 4 characters long")
+      .max(128, "Username is too long")
+      .regex(/^[A-Za-z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
     email: z.string().email(),
     password: z
       .string()
-      .min(6, "Password must be at least 6 characters long")
-      .max(256, "Password is too long"),
+      .min(4, "Password must be at least 4 characters long")
+      .max(256, "Password is too long")
+      .regex(
+        /^[a-zA-Z0-9]+(?=.*[a-zA-Z])(?=.*[0-9])$/,
+        "Password must be a combination of letters and numbers"
+      ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -57,7 +66,7 @@ export default function Register() {
       body: JSON.stringify(data),
     }).then((res) => res.json());
 
-    if (res.message) {
+    if (!res.user_id) {
       setRegisterErr(res.message);
       return;
     }
@@ -99,11 +108,13 @@ export default function Register() {
           />
           {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
         </div>
-        {registerErr && <p>{registerErr}</p>}
-        <button type="submit" disabled={isSubmitting}>
-          Sign up
-        </button>
-        <Link href="/login">Already registered</Link>
+        <div>
+          {registerErr && <p>{registerErr}</p>}
+          <button type="submit" disabled={isSubmitting}>
+            Sign up
+          </button>
+          <Link href="/login">Already registered</Link>
+        </div>
       </form>
     </main>
   );

@@ -1,10 +1,13 @@
 "use client";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { signIn, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 
 // form validation schema using zod
 const schema = z.object({
@@ -22,12 +25,13 @@ type schemaType = z.infer<typeof schema>;
  * Login page
  */
 export default function Login() {
+  // if the user is already logged in, redirect to the chat page
   const { data: session } = useSession();
   if (session && session.user) {
     redirect("/chat");
   }
 
-  // use react-hook-form to handle form state
+  // handle form state
   const {
     register,
     handleSubmit,
@@ -37,14 +41,15 @@ export default function Login() {
   });
 
   // handle form submission
+  const [loginErr, setLoginErr] = useState("");
   const onSubmit: SubmitHandler<schemaType> = async (data) => {
-    // hash the password
-    await signIn("credentials", {
+    const result = await signIn("credentials", {
       email: data.email,
       password: data.password,
-      redirect: true,
+      redirect: false,
       callbackUrl: "/chat",
     });
+    result?.error && setLoginErr("Invalid email or password");
   };
 
   return (
@@ -61,10 +66,13 @@ export default function Login() {
           <input {...register("password")} type="password" name="password" id="password" />
           {errors.password && <p>{errors.password.message}</p>}
         </div>
-        <button type="submit" disabled={isSubmitting}>
-          Log in
-        </button>
-        <Link href="/register">I am a new user</Link>
+        <div>
+          {loginErr && <p>{loginErr}</p>}
+          <button type="submit" disabled={isSubmitting}>
+            Log in
+          </button>
+          <Link href="/register">I am a new user</Link>
+        </div>
       </form>
     </main>
   );

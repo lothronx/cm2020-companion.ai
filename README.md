@@ -29,6 +29,7 @@ Run the server:
 python main.py
 ```
 Open [http://127.0.0.1:5000/](http://127.0.0.1:5000/) with your browser to see the result.
+
 ### Frontend:
 Open a new terminal:
 ```bash

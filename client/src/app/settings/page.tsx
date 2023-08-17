@@ -6,11 +6,27 @@ import { signOut } from "next-auth/react";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 export default function Settings() {
+  // use state to handle the Open API modal
   const [isAPIModalOpen, setIsAPIModalOpen] = useState(false);
+
+  // use state to handle the Open API key
   const [apiKey, setApiKey] = useState("");
 
-  const handleOpenAPI = () => {
-    console.log("API key submitted:", apiKey);
+  // handle form submission
+  const handleApiKey = async () => {
+    const result = await fetch("http://127.0.0.1:5000/api/settings/openapi", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ apiKey: apiKey }),
+    }).then((res) => res.json());
+
+    if (result.status !== "success") {
+      alert(result.message);
+      return;
+    }
+
     setIsAPIModalOpen(false);
   };
 
@@ -47,14 +63,13 @@ export default function Settings() {
       {isAPIModalOpen && (
         <div>
           <div>
-            <p>Enter your OpenAI API Key</p>
             <input
               type="text"
-              placeholder="Enter your API key..."
+              placeholder="Enter your OpenAI API key here"
               value={apiKey}
               onChange={(event) => setApiKey(event.target.value)}
             />
-            <button onClick={handleOpenAPI}>Submit</button>
+            <button onClick={handleApiKey}>Submit</button>
             <button
               onClick={() => {
                 setIsAPIModalOpen(false);
