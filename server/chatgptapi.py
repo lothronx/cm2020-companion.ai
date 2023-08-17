@@ -51,10 +51,16 @@ def CustomChatGPT(user_id, companion_id, user_input):
     # Add user's message to the database
     insert_user_message(user_id, companion_id, user_input)
 
+    # Retrieve past message contents from the database
+    past_messages = get_messages(user_id, companion_id)
+
+    # Add the current user's message to the list
+    past_messages.append({"role": "user", "content": user_input})
+
     # Get a reply from ChatGPT
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "You are an AI Powered Love Assistant"}, {"role": "user", "content": user_input}]
+        messages=past_messages
     )
     ChatGPT_reply = response["choices"][0]["message"]["content"]
 
