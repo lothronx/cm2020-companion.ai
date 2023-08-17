@@ -27,25 +27,14 @@ def validate_connection(api_key):
     except Exception as e:
         print(f"Error: {e}")
         return False
-
-
+    
 # Test the function
 if validate_connection(api_key):
     print("Connection successful!")
 else:
     print("Connection failed!")
 
-## Base Code I have run before 
-# def CustomChatGPT(user_input):
-#     messages.append({"role": "user", "content": user_input})
-#     response = openai.ChatCompletion.create(
-#         model = "gpt-3.5-turbo",
-#         messages = messages
-#     )
-#     ChatGPT_reply = response["choices"][0]["message"]["content"]
-#     messages.append({"role": "assistant", "content": ChatGPT_reply})
-#     return ChatGPT_reply
-
+## With Multiple Companions 
 
 def CustomChatGPT(user_id, companion_id, user_input):
     # Add user's message to the database
@@ -69,6 +58,29 @@ def CustomChatGPT(user_id, companion_id, user_input):
 
     return ChatGPT_reply
 
+## Single Companion
+
+# def CustomChatGPT(user_id, user_input):
+#     # Add user's message to the database
+#     insert_user_message(user_id, user_input)
+
+#     # Retrieve past message contents from the database
+#     past_messages = get_messages(user_id)
+
+#     # Add the current user's message to the list
+#     past_messages.append({"role": "user", "content": user_input})
+
+#     # Get a reply from ChatGPT
+#     response = openai.ChatCompletion.create(
+#         model="gpt-3.5-turbo",
+#         messages=past_messages
+#     )
+#     ChatGPT_reply = response["choices"][0]["message"]["content"]
+
+#     # Add assistant's reply to the database
+#     insert_ai_message(user_id, ChatGPT_reply)
+
+#     return ChatGPT_reply
 
 
 if __name__ == "__main__":

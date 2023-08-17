@@ -5,6 +5,8 @@ from pymongo.errors import DuplicateKeyError
 import uuid
 from datetime import datetime
 import bcrypt
+from bson.objectid import ObjectId
+
 
 # Replace with your MongoDB Atlas connection string
 MONGO_URI = "mongodb+srv://databasemain:123@asp-project.xy7kyod.mongodb.net/?retryWrites=true&w=majority"
@@ -93,7 +95,7 @@ def create_companion(user_id,companion_name, friendliness, humor_level, specific
     return companion_id
 
 
-
+#T0-DO ( add _id to Identify for that Indivual)
 def list_all_companion_names():
     companion_settings = db['companion_settings']
     
@@ -102,11 +104,17 @@ def list_all_companion_names():
     
     return companion_names
 
-# names = list_all_companion_names()
-# if names:
-#     print("All companion names:", ', '.join(names))
-# else:
-#     print("No companions found.")
+
+def get_single_companion_id(user_id):
+    # Accessing the companion_settings collection
+    companion_settings = db['companion_settings']
+    
+    # Querying the collection to find the record with the specified user_id
+    result = companion_settings.find_one({'user_id':user_id})
+    
+    if result and 'companion_id' in result:
+        return str(result['companion_id'])
+    return None
 
 
 ## Functions Relating Messages Database 
@@ -121,7 +129,7 @@ def insert_ai_message(user_id, companion_id, message_content):
     message_data = {
         'user_id': user_id,
         'companion_id': companion_id,
-        'sender': 'AI',
+        'sender': 'assistant',
         'timestamp': current_timestamp(),
         'message_content': message_content
     }
@@ -133,40 +141,52 @@ def insert_user_message(user_id, companion_id, message_content):
     message_data = {
         'user_id': user_id,
         'companion_id': companion_id,
-        'sender': 'User',
+        'sender': 'user',
         'timestamp': current_timestamp(),
         'message_content': message_content
     }
     return messages.insert_one(message_data).inserted_id
 
-# Example usage:
-# insert_ai_message(user_id="some_user_id", companion_id="some_companion_id", 
-#                   message_content="Hello, I'm the AI!")
-
-# insert_user_message(user_id="some_user_id", companion_id="some_companion_id", 
-#                     message_content="Hello, how are you?")
 
 
 def get_messages(user_id, companion_id):
     """Retrieve all messages for a specific user_id and companion_id."""
-    messages = db['messages']
-    # Find messages based on user_id and companion_id
-    results = messages.find({
-        'user_id': user_id,
-        'companion_id': companion_id
-    })
-    # Extracting message content from the results
-    message_contents = [message['message_content'] for message in results]
-    return message_contents
+    try:
+        messages = db['messages']
+        
+        # Convert string IDs to ObjectId
+        # user_id_obj = ObjectId(user_id)
+        # companion_id_obj = ObjectId(companion_id)
 
-# Example usage:
-# messages_list = get_messages(user_id="some_user_id", companion_id="some_companion_id")
-# for msg in messages_list:
-#     print(msg)
+        # Find messages based on user_id and companion_id
+        # results = messages.find({ 
+        #     '_id': user_id,
+        #     'chat_id': companion_id_obj
+        # })
+        results = messages.find({ 
+            'user_id': user_id,
+            'companion_id': companion_id
+        })
+        
+        # Extracting message content and sender from the results
+        message_data = [{'role': message['sender'].lower(), 'content': message['message_content']} for message in results]
+        
+        # Logging the retrieved results for debugging
+        print(f"Retrieved {len(message_data)} messages for user_id {user_id} and companion_id {companion_id}.")
+        
+        return message_data
+    except Exception as e:
+        # Print any exception that occurs
+        print(f"An error occurred: {e}")
+        return []
+
 
 
 if __name__ == "__main__":
     # This code only runs if you execute this file directly, not if you import it
     test_connection()
-
+    user_messages = get_messages("64de65ab40faf2488003dbbf", "fe7aca8c-8a00-42a2-9ee1-7fdc14fdfa2c")
+    print(user_messages)
+    # companion_id = get_single_companion_id("64da004e1f9ef2cc5a24a7e8")
+    # print(companion_id)
    
