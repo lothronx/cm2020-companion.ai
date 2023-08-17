@@ -23,7 +23,7 @@ const handler = NextAuth({
         if (user.status === "success") {
           return user.user_id;
         } else {
-          return user.message;
+          return null;
         }
       },
     }),
