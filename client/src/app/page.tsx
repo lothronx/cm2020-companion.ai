@@ -12,11 +12,20 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <h1>Companion.ai</h1>
-      <p>The AI Companion who can detect your emotions</p>
-      <Link href="/register">Register</Link>
-      <Link href="/login">Log in</Link>
+    <main style={{ display: "flex", 
+                   flexDirection: "column", 
+                   justifyContent: "center", 
+                   alignItems: "center", 
+                   height: '50vh',}}>
+      <h1 class="font-bold">COMPANION AI</h1>
+      <h2 class="font-light">Welcome to Companion AI</h2>
+      <p class="font-light">Find companionship with our advanced AI,</p>
+      <p class="font-light">tailor-made to offer authentic, romantic</p>
+      <p class="font-light">interactions and experiences</p>
+
+      <div className="centered-main"><Link href="/register"><button class="btn btn-primary">Register</button></Link></div>
+      <div><Link href="/login"><button class="btn btn-primary">Log in</button></Link></div>
+      
     </main>
   );
 }
