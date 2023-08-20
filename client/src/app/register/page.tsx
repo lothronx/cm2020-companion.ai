@@ -80,27 +80,32 @@ export default function Register() {
   };
 
   return (
-    <main>
-      <h1>Welcome to Companion.ai</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <main style={{ display: "flex", 
+          flexDirection: "column", 
+          justifyContent: "center", 
+          alignItems: "center", 
+          height: '50vh',}}>
+      <h1 class="font-bold">Welcome to Companion.ai</h1>
+      <form>
         <div>
           <label htmlFor="username">Username</label>
-          <input {...register("username")} type="text" name="username" id="username" />
+          <input  class="input input-bordered input-xs max-w-xs" {...register("username")} type="text" name="username" id="username" />
           {errors.username && <p>{errors.username.message}</p>}
         </div>
         <div>
           <label htmlFor="email">Email</label>
-          <input {...register("email")} type="email" name="email" id="email" />
+          <input class="input input-bordered input-xs max-w-xs" {...register("email")} type="email" name="email" id="email" />
           {errors.email && <p>{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input {...register("password")} type="password" name="password" id="password" />
+          <input class="input input-bordered input-xs max-w-xs" {...register("password")} type="password" name="password" id="password" />
           {errors.password && <p>{errors.password.message}</p>}
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
+            class="input input-bordered input-xs max-w-xs"
             {...register("confirmPassword")}
             type="password"
             name="confirmPassword"
@@ -110,10 +115,10 @@ export default function Register() {
         </div>
         <div>
           {registerErr && <p>{registerErr}</p>}
-          <button type="submit" disabled={isSubmitting}>
+          <button class="btn btn-primary" type="submit" disabled={isSubmitting}>
             Sign up
           </button>
-          <Link href="/login">Already registered</Link>
+          <button class="btn btn-primary"><Link href="/login">Already registered</Link></button>
         </div>
       </form>
     </main>
