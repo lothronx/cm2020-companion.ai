@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn {
+    @apply rounded-full;
+    width: 20vw;
+    padding: 1vw;
+    margin-bottom: 0.5vh;
+    margin-top: 0.5vh;
+    margin-left: 0.5vh;
+    margin-right: 0.5vh;
+    color:antiquewhite;
+    font: 400 13px system-ui;
+    border-radius: 20px;
+    background-color: #5A64EA;
+}
+
+h1 {
+    font-size: 20px;
+    color: #5A64EA;
+}
+
+h2 {
+    font-size: 15px;
+}
+
+p {
+    font-size: 12px;
+}
