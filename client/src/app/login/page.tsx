@@ -53,25 +53,29 @@ export default function Login() {
   };
 
   return (
-    <main>
-      <h1>Welcome back to Companion.ai</h1>
+    <main style={{ display: "flex", 
+                    flexDirection: "column", 
+                    justifyContent: "center", 
+                    alignItems: "center", 
+                    height: '50vh',}}>
+      <h1 class="font-bold">Welcome back to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="email">Email</label>
-          <input {...register("email")} type="text" name="email" id="email" />
+          <input class="input input-bordered input-xs max-w-xs" {...register("email")} type="text" name="email" id="email" />
           {errors.email && <p>{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input {...register("password")} type="password" name="password" id="password" />
+          <input class="input input-bordered input-xs max-w-xs" {...register("password")} type="password" name="password" id="password" />
           {errors.password && <p>{errors.password.message}</p>}
         </div>
         <div>
           {loginErr && <p>{loginErr}</p>}
-          <button type="submit" disabled={isSubmitting}>
+          <button class="btn btn-primary" type="submit" disabled={isSubmitting}>
             Log in
           </button>
-          <Link href="/register">I am a new user</Link>
+          <button class="btn btn-primary"><Link href="/register">I am a new user</Link></button>
         </div>
       </form>
     </main>
