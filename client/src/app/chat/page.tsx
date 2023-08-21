@@ -32,8 +32,9 @@ export default function Chat() {
     setLoading(true);
 
     axios
-      .get("/api/chat", { signal: controller.signal })
+      .get("http://127.0.0.1:5000/api/chat", { signal: controller.signal })
       .then((res) => {
+        console.log(res);
         setLoading(false);
       })
       .catch((err) => {
@@ -48,8 +49,19 @@ export default function Chat() {
   }, []);
 
   // onSubmit
-  const onSubmit: SubmitHandler<{ message: string }> = (data) => {
+  const onSubmit: SubmitHandler<{ message: string }> = async (data) => {
     setMessages((messages) => [...messages, { text: data.message, isUser: true }]);
+
+    const res = await fetch("http://127.0.0.1:5000/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => res.json());
+
+    console.log(res);
+    //setMessages((messages) => [...messages, { text: res.message, isUser: false }]);
   };
 
   return (
