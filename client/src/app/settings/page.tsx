@@ -32,8 +32,8 @@ export default function Settings() {
 
   return (
     <>
-      <main>
-        <h1>Settings</h1>
+      <main className="flex flex-col justify-center items-center h-1/2vh">
+        <h1 className="text-primary font-bold text-2xl">Settings</h1>
         <Link href="/chat">
           <MdOutlineArrowForwardIos />
         </Link>

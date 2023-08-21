@@ -22,10 +22,7 @@ const schema = z
       .string()
       .min(4, "Password must be at least 4 characters long")
       .max(256, "Password is too long")
-      .regex(
-        /^[a-zA-Z0-9]+(?=.*[a-zA-Z])(?=.*[0-9])$/,
-        "Password must be a combination of letters and numbers"
-      ),
+      .regex(/^[A-Za-z0-9]+$/, "Password can only contain letters and numbers"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -80,27 +77,46 @@ export default function Register() {
   };
 
   return (
-    <main>
-      <h1>Welcome to Companion.ai</h1>
+    <main className="flex flex-col justify-center items-center h-1/2vh">
+      <h1 className="text-primary font-bold text-2xl">Welcome to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="username">Username</label>
-          <input {...register("username")} type="text" name="username" id="username" />
+          <input
+            className="input input-bordered input-xs max-w-xs"
+            {...register("username")}
+            type="text"
+            name="username"
+            id="username"
+          />
           {errors.username && <p>{errors.username.message}</p>}
         </div>
         <div>
           <label htmlFor="email">Email</label>
-          <input {...register("email")} type="email" name="email" id="email" />
+          <input
+            className="input input-bordered input-xs max-w-xs"
+            {...register("email")}
+            type="email"
+            name="email"
+            id="email"
+          />
           {errors.email && <p>{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input {...register("password")} type="password" name="password" id="password" />
+          <input
+            className="input input-bordered input-xs max-w-xs"
+            {...register("password")}
+            type="password"
+            name="password"
+            id="password"
+          />
           {errors.password && <p>{errors.password.message}</p>}
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
+            className="input input-bordered input-xs max-w-xs"
             {...register("confirmPassword")}
             type="password"
             name="confirmPassword"
@@ -110,10 +126,12 @@ export default function Register() {
         </div>
         <div>
           {registerErr && <p>{registerErr}</p>}
-          <button type="submit" disabled={isSubmitting}>
+          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
             Sign up
           </button>
-          <Link href="/login">Already registered</Link>
+          <Link className="btn text-primary" href="/login">
+            Already registered
+          </Link>
         </div>
       </form>
     </main>

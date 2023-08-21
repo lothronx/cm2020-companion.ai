@@ -2,14 +2,15 @@ from flask import Flask, render_template, request, jsonify, session
 from flask_cors import CORS
 from mongodbsetup import login, insert_user, get_messages, get_single_companion_id
 from chatgptapi import CustomChatGPT
-from emojify2 import Emoji
+#from emojify2 import Emoji
 
 
 
 # __name__ is equal to app.py
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_secret_key'
 CORS(app, resources={r"*": {"origins": "*"}})
-emoji_client = Emoji()
+#emoji_client = Emoji()
 @app.route("/", methods=['GET'])
 def home():
     return render_template('index.html')
@@ -85,6 +86,7 @@ def login_route():
     session['companion_id'] = companion_id  # Storing companion_id in session
 
     return jsonify({"status": "success", "user_id": user_id, "companion_id": {companion_id}}), 200
+
 # Set OpenAI API Route
 # TODO: Implement this route
 @app.route("/api/settings/openapi", methods=["POST"])
@@ -93,8 +95,8 @@ def settings_openapi_route():
     return jsonify({"status": "success"}), 200
 
 # Server Testing Route 
-@app.route("/", methods=["GET"])
-def home():
+@app.route("/test", methods=["GET"])
+def test():
     return "It's working", 200
 
 
