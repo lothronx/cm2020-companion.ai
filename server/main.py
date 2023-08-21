@@ -79,7 +79,7 @@ def login_route():
 
     # At this point, the user is authenticated
     session['user_id'] = user_id  # Storing user_id in session
-    return jsonify({"status": "success", "message": "Logged in successfully!"}), 200
+    return jsonify({"status": "success", "message": "Logged in successfully!", "user_id": user_id}), 200
 
     # Get the companion_id for the logged-in user
     # companion_id = get_single_companion_id(user_id)
