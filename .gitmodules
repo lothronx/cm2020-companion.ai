@@ -1,5 +1,5 @@
-[submodule "src/server/emojify"]
-	path = src/server/emojify
+[submodule "server/emojify"]
+	path = server/emojify
 	url = https://github.com/ertosns/emojify
 [submodule "server/emojify"]
 	path = server/emojify

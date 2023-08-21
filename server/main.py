@@ -2,32 +2,33 @@ from flask import Flask, render_template, request, jsonify, session
 from flask_cors import CORS
 from mongodbsetup import login, insert_user, get_messages, get_single_companion_id
 from chatgptapi import CustomChatGPT
-from emojify2 import Emoji
-
+# from emojify2 import Emoji
 
 
 # __name__ is equal to app.py
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'some_unique_and_secret_key'
+
 CORS(app, resources={r"*": {"origins": "*"}})
-emoji_client = Emoji()
-@app.route("/", methods=['GET'])
-def home():
-    return render_template('index.html')
+# emoji_client = Emoji()
+# @app.route("/", methods=['GET'])
+# def home():
+#     return render_template('index.html')
 
-@app.route("/chat", methods=['GET', 'POST'])
-def chat():
-    question = request.args['question']
-    comp = Companion()
-    response = comp.ask_question(question)
-    return render_template("index.html", result=response)
+# @app.route("/chat", methods=['GET', 'POST'])
+# def chat():
+#     question = request.args['question']
+#     comp = Companion()
+#     response = comp.ask_question(question)
+#     return render_template("index.html", result=response)
 
 
-@app.route("/emojify", methods=['GET', 'POST'])
-def emojify():
-    statement = request.args['statement']
-    print('emojifying: {}'.format(statement))
-    ret = emoji_client.emojify(statement)
-    return render_template("index.html", result=ret)
+# @app.route("/emojify", methods=['GET', 'POST'])
+# def emojify():
+#     statement = request.args['statement']
+#     print('emojifying: {}'.format(statement))
+#     ret = emoji_client.emojify(statement)
+#     return render_template("index.html", result=ret)
 
 
 # Create User
@@ -75,18 +76,21 @@ def login_route():
 
     # At this point, the user is authenticated
     session['user_id'] = user_id  # Storing user_id in session
+    return jsonify({"status": "success", "message": "Logged in successfully!"}), 200
 
     # Get the companion_id for the logged-in user
-    companion_id = get_single_companion_id(user_id)
-    if not companion_id:
-        return jsonify({"status": "error", "message": "No companions found"}), 400
+    # companion_id = get_single_companion_id(user_id)
+    # if not companion_id:
+    #     return jsonify({"status": "error", "message": "No companions found"}), 400
 
-    # At this point, the companion ID is found
-    session['companion_id'] = companion_id  # Storing companion_id in session
+    # # At this point, the companion ID is found
+    # session['companion_id'] = companion_id  # Storing companion_id in session
 
-    return jsonify({"status": "success", "user_id": user_id, "companion_id": {companion_id}}), 200
+    # return jsonify({"status": "success", "user_id": user_id, "companion_id": {companion_id}}), 200
+
+
 # Set OpenAI API Route
-# TODO: Implement this route
+
 @app.route("/api/settings/openapi", methods=["POST"])
 def settings_openapi_route():
     data = request.get_json()
@@ -99,7 +103,6 @@ def home():
 
 
 #OpenAI Routes 
-
 
 #Retreive Messages
 @app.route("/api/chat_history", methods=["GET"])
