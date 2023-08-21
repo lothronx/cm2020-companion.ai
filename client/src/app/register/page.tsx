@@ -78,9 +78,9 @@ export default function Register() {
 
   return (
     <main className="flex flex-col justify-center items-center h-1/2vh">
-      <h1 className="text-primary font-bold text-2xl">Welcome to Companion.ai</h1>
+      <h1 className="text-primary font-bold text-2xl mb-5">Welcome to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="username">Username</label>
           <input
             className="input input-bordered input-xs max-w-xs"
@@ -89,9 +89,9 @@ export default function Register() {
             name="username"
             id="username"
           />
-          {errors.username && <p>{errors.username.message}</p>}
+          {errors.username && <p className=" text-xs col-span-2 text-blue-800">{errors.username.message}</p>}
         </div>
-        <div>
+        <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="email">Email</label>
           <input
             className="input input-bordered input-xs max-w-xs"
@@ -100,9 +100,9 @@ export default function Register() {
             name="email"
             id="email"
           />
-          {errors.email && <p>{errors.email.message}</p>}
+          {errors.email && <p className=" text-xs col-span-2 text-blue-800">{errors.email.message}</p>}
         </div>
-        <div>
+        <div  className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="password">Password</label>
           <input
             className="input input-bordered input-xs max-w-xs"
@@ -111,9 +111,9 @@ export default function Register() {
             name="password"
             id="password"
           />
-          {errors.password && <p>{errors.password.message}</p>}
+          {errors.password && <p className=" text-xs col-span-2 text-blue-800">{errors.password.message}</p>}
         </div>
-        <div>
+        <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
             className="input input-bordered input-xs max-w-xs"
@@ -122,7 +122,7 @@ export default function Register() {
             name="confirmPassword"
             id="confirmPassword"
           />
-          {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+          {errors.confirmPassword && <p className=" text-xs col-span-2 text-blue-800">{errors.confirmPassword.message}</p>}
         </div>
         <div>
           {registerErr && <p>{registerErr}</p>}
