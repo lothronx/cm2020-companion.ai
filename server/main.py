@@ -5,8 +5,10 @@ from chatgptapi import CustomChatGPT
 # from emojify2 import Emoji
 
 
+
 # __name__ is equal to app.py
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'some_unique_and_secret_key'
 
 CORS(app, resources={r"*": {"origins": "*"}})
@@ -14,6 +16,7 @@ CORS(app, resources={r"*": {"origins": "*"}})
 # @app.route("/", methods=['GET'])
 # def home():
 #     return render_template('index.html')
+
 
 # @app.route("/chat", methods=['GET', 'POST'])
 # def chat():
@@ -97,8 +100,8 @@ def settings_openapi_route():
     return jsonify({"status": "success"}), 200
 
 # Server Testing Route 
-@app.route("/", methods=["GET"])
-def home():
+@app.route("/test", methods=["GET"])
+def test():
     return "It's working", 200
 
 

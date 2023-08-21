@@ -12,11 +12,15 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <h1>Companion.ai</h1>
-      <p>The AI Companion who can detect your emotions</p>
-      <Link href="/register">Register</Link>
-      <Link href="/login">Log in</Link>
+    <main className="flex flex-col justify-center items-center h-1/2vh">
+      <h1 className="text-primary font-bold text-2xl">Companion.ai</h1>
+      <p className="font-light">The AI Companion who can detect your emotions</p>
+      <Link className="centered-main btn btn-primary" href="/register">
+        Register
+      </Link>
+      <Link className="centered-main btn btn-primary" href="/login">
+        Log in
+      </Link>
     </main>
   );
 }

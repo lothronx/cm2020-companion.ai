@@ -53,25 +53,39 @@ export default function Login() {
   };
 
   return (
-    <main>
-      <h1>Welcome back to Companion.ai</h1>
+    <main className="flex flex-col justify-center items-center h-1/2vh">
+      <h1 className="text-primary font-bold text-2xl">Welcome back to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="email">Email</label>
-          <input {...register("email")} type="text" name="email" id="email" />
-          {errors.email && <p>{errors.email.message}</p>}
+          <input
+            className="input input-bordered input-xs max-w-xs"
+            {...register("email")}
+            type="text"
+            name="email"
+            id="email"
+          />
+          {errors.email && <p className=" text-xs col-span-2 text-blue-800">{errors.email.message}</p>}
         </div>
-        <div>
+        <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="password">Password</label>
-          <input {...register("password")} type="password" name="password" id="password" />
-          {errors.password && <p>{errors.password.message}</p>}
+          <input
+            className="input input-bordered input-xs max-w-xs"
+            {...register("password")}
+            type="password"
+            name="password"
+            id="password"
+          />
+          {errors.password && <p className=" text-xs col-span-2 text-blue-800">{errors.password.message}</p>}
         </div>
         <div>
           {loginErr && <p>{loginErr}</p>}
-          <button type="submit" disabled={isSubmitting}>
+          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
             Log in
           </button>
-          <Link href="/register">I am a new user</Link>
+          <Link className="btn text-primary" href="/register">
+            I am a new user
+          </Link>
         </div>
       </form>
     </main>
