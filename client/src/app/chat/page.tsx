@@ -26,7 +26,7 @@ export default function Chat() {
       emotion: "",
     },
   ]);
-  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   // useForm
   const {
@@ -80,7 +80,7 @@ export default function Chat() {
       },
     ]);
 
-    setTyping(true);
+    setIsTyping(true);
 
     try {
       const response = await fetch("http://127.0.0.1:5000/api/chat", {
@@ -93,7 +93,7 @@ export default function Chat() {
 
       const fetchedMessage: Message = await response.json();
 
-      setTyping(false);
+      setIsTyping(false);
 
       setMessages((messages) => [
         ...messages.slice(0, -1),
@@ -108,7 +108,7 @@ export default function Chat() {
       ]);
     } catch (err) {
       console.log(err);
-      setTyping(false);
+      setIsTyping(false);
     }
   };
 
@@ -124,6 +124,10 @@ export default function Chat() {
 
       <main>
         <section>
+          <header className="flex flex-col justify-center footer-center h-1/2vh text-xs">
+            Companion.ai is powered by OpenAI. <br />
+            Everything AI says is not real.
+          </header>
           <ul>
             {messages.map((message) => (
               <li
@@ -135,7 +139,7 @@ export default function Chat() {
                 <p>{message.emotion}</p>
               </li>
             ))}
-            <li>{typing && "AI is typing..."}</li>
+            <li>{isTyping && "AI is typing..."}</li>
           </ul>
         </section>
         <form
@@ -150,7 +154,7 @@ export default function Chat() {
             id="message"
             placeholder="Type your message here..."
           />
-          <button type="submit" disabled={isSubmitting}>
+          <button type="submit" disabled={isSubmitting || isTyping}>
             <MdArrowCircleUp />
           </button>
         </form>
