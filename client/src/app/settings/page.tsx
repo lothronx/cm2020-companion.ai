@@ -34,27 +34,27 @@ export default function Settings() {
     <>
       <main className="flex flex-col justify-center items-center h-1/2vh">
         <h1 className="text-primary font-bold text-2xl">Settings</h1>
-        <Link href="/chat">
+        <Link className="centered-main btn btn-outline btn-info" href="/chat">
           <MdOutlineArrowForwardIos />
         </Link>
         <ul>
           <li>
-            <button onClick={() => setIsAPIModalOpen(true)}>OpenAI API</button>
+            <button className="centered-main btn btn-primary" onClick={() => setIsAPIModalOpen(true)}>OpenAI API</button>
           </li>
           <li>
-            <button>Documentation</button>
+            <button className="centered-main btn btn-primary" >Documentation</button>
           </li>
           <li>
-            <Link href="mailto:companionai@gmail.com">Contact Us</Link>
+            <Link className="centered-main btn btn-primary" href="mailto:companionai@gmail.com">Contact Us</Link>
           </li>
           <li>
-            <button onClick={() => signOut({ callbackUrl: "http://localhost:3000/" })}>
+            <button className="centered-main btn btn-primary" onClick={() => signOut({ callbackUrl: "http://localhost:3000/" })}>
               Sign out
             </button>
           </li>
         </ul>
       </main>
-      <footer>
+      <footer  className="flex flex-col justify-center footer-center h-1/2vh text-xs">
         Companion.ai is powered by OpenAI. <br />
         Everything AI says is not real.
       </footer>
