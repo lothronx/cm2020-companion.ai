@@ -10,7 +10,7 @@ interface Message {
   id: number;
   content: string;
   role: string;
-  timestamp: number;
+  timestamp: string;
   emotion: string;
 }
 
@@ -22,7 +22,21 @@ export default function Chat() {
       content:
         "Hi, I am your ai companion who can detect your emotions. How are you feeling today?",
       role: "bot",
-      timestamp: Date.now(),
+      timestamp: "2020-10-10 10:10:10",
+      emotion: "",
+    },
+    {
+      id: 2,
+      content: "Hi, I am feeling good",
+      role: "user",
+      timestamp: "2020-10-10 10:10:10",
+      emotion: "😄",
+    },
+    {
+      id: 3,
+      content: "What did you do today",
+      role: "bot",
+      timestamp: "2020-10-10 10:10:10",
       emotion: "",
     },
   ]);
@@ -34,48 +48,48 @@ export default function Chat() {
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<{ message: string }>();
+  } = useForm<{ content: string }>();
 
   // useEffect
   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/chat", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const recentMessageHistory: Message[] = await response.json();
+
+        setMessages((messages) => [
+          ...messages,
+          ...recentMessageHistory.map((message) => ({
+            id: message.id,
+            content: message.content,
+            role: message.role,
+            timestamp: message.timestamp,
+            emotion: message.emotion,
+          })),
+        ]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     fetchMessages();
   }, []);
 
-  const fetchMessages = async () => {
-    try {
-      const response = await fetch("http://127.0.0.1:5000/api/chat", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const fetchedMessages: Message[] = await response.json();
-
-      setMessages((messages) => [
-        ...messages,
-        ...fetchedMessages.map((message) => ({
-          id: message.id,
-          content: message.content,
-          role: message.role,
-          timestamp: message.timestamp,
-          emotion: message.emotion,
-        })),
-      ]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   // onSubmit
-  const onSubmit: SubmitHandler<{ message: string }> = async (data) => {
+  const onSubmit: SubmitHandler<{ content: string }> = async (data) => {
     setMessages((messages) => [
       ...messages,
       {
         id: messages[messages.length - 1].id + 1,
-        content: data.message,
+        content: data.content,
         role: "user",
-        timestamp: Date.now(),
+        timestamp: "",
         emotion: "",
       },
     ]);
@@ -91,20 +105,19 @@ export default function Chat() {
         body: JSON.stringify(data),
       });
 
-      const fetchedMessage: Message = await response.json();
+      const newMessages: Message[] = await response.json();
 
       setIsTyping(false);
 
       setMessages((messages) => [
         ...messages.slice(0, -1),
-        { ...messages[messages.length - 1], emotion: fetchedMessage.emotion },
-        {
-          id: fetchedMessage.id,
-          content: fetchedMessage.content,
-          role: "bot",
-          timestamp: fetchedMessage.timestamp,
-          emotion: "",
-        },
+        ...newMessages.map((message) => ({
+          id: message.id,
+          content: message.content,
+          role: message.role,
+          timestamp: message.timestamp,
+          emotion: message.emotion,
+        })),
       ]);
     } catch (err) {
       console.log(err);
@@ -132,9 +145,10 @@ export default function Chat() {
             {messages.map((message) => (
               <li
                 key={message.id}
-                className={`chat-message ${
-                  message.role == "user" ? "user-message" : "bot-message"
-                }`}>
+                className={`text-s
+                 ${
+                   message.role == "user" ? "text-primary bg-base-100" : "bg-primary text-base-100"
+                 }`}>
                 <p>{message.content}</p>
                 <p>{message.emotion}</p>
               </li>
@@ -148,10 +162,10 @@ export default function Chat() {
             reset();
           })}>
           <input
-            {...register("message")}
+            {...register("content")}
             type="text"
-            name="message"
-            id="message"
+            name="content"
+            id="content"
             placeholder="Type your message here..."
           />
           <button type="submit" disabled={isSubmitting || isTyping}>
