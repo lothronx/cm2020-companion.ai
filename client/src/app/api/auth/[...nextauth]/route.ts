@@ -21,7 +21,7 @@ const handler = NextAuth({
         }).then((res) => res.json());
 
         if (user.status === "success") {
-          return user.user_id;
+          return user;
         } else {
           return null;
         }
@@ -34,6 +34,16 @@ const handler = NextAuth({
   },
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+
+    async session({ session, token }) {
+      session.user = token as any;
+      return session;
+    },
   },
 });
 

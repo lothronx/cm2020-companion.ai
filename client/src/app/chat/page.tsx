@@ -1,21 +1,32 @@
 "use client";
 
-import axios, { CanceledError } from "axios";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import { MdOutlineArrowBackIos, MdArrowCircleUp } from "react-icons/md";
 import { AiOutlineRobot } from "react-icons/ai";
 
+interface Message {
+  id: number;
+  content: string;
+  role: string;
+  timestamp: number;
+  emotion: string;
+}
+
 export default function Chat() {
   // useState
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "Hello, I'm Alex, your AI companion. How are you feeling today?", isUser: false },
-    { text: "I'm doing great! How about you?", isUser: true },
-    { text: "I'm doing great too!", isUser: false },
+    {
+      id: 1,
+      content:
+        "Hi, I am your ai companion who can detect your emotions. How are you feeling today?",
+      role: "bot",
+      timestamp: Date.now(),
+      emotion: "",
+    },
   ]);
+  const [typing, setTyping] = useState(false);
 
   // useForm
   const {
@@ -27,41 +38,78 @@ export default function Chat() {
 
   // useEffect
   useEffect(() => {
-    const controller = new AbortController();
+    fetchMessages();
+  }, []);
 
-    setLoading(true);
-
-    axios
-      .get("http://127.0.0.1:5000/api/chat", { signal: controller.signal })
-      .then((res) => {
-        console.log(res);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        setError(err.message);
-        setLoading(false);
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/chat", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-    return () => {
-      controller.abort();
-    };
-  }, []);
+      const fetchedMessages: Message[] = await response.json();
+
+      setMessages((messages) => [
+        ...messages,
+        ...fetchedMessages.map((message) => ({
+          id: message.id,
+          content: message.content,
+          role: message.role,
+          timestamp: message.timestamp,
+          emotion: message.emotion,
+        })),
+      ]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // onSubmit
   const onSubmit: SubmitHandler<{ message: string }> = async (data) => {
-    setMessages((messages) => [...messages, { text: data.message, isUser: true }]);
-
-    const res = await fetch("http://127.0.0.1:5000/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    setMessages((messages) => [
+      ...messages,
+      {
+        id: messages[messages.length - 1].id + 1,
+        content: data.message,
+        role: "user",
+        timestamp: Date.now(),
+        emotion: "",
       },
-      body: JSON.stringify(data),
-    }).then((res) => res.json());
+    ]);
 
-    console.log(res);
-    //setMessages((messages) => [...messages, { text: res.message, isUser: false }]);
+    setTyping(true);
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const fetchedMessage: Message = await response.json();
+
+      setTyping(false);
+
+      setMessages((messages) => [
+        ...messages.slice(0, -1),
+        { ...messages[messages.length - 1], emotion: fetchedMessage.emotion },
+        {
+          id: fetchedMessage.id,
+          content: fetchedMessage.content,
+          role: "bot",
+          timestamp: fetchedMessage.timestamp,
+          emotion: "",
+        },
+      ]);
+    } catch (err) {
+      console.log(err);
+      setTyping(false);
+    }
   };
 
   return (
@@ -75,17 +123,20 @@ export default function Chat() {
       </header>
 
       <main>
-        {loading && <p>Loading...</p>}
-        {error && <p>{error}</p>}
-
         <section>
-          {messages.map((message, index) => (
-            <p
-              key={index}
-              className={`chat-message ${message.isUser ? "user-message" : "bot-message"}`}>
-              {message.text}
-            </p>
-          ))}
+          <ul>
+            {messages.map((message) => (
+              <li
+                key={message.id}
+                className={`chat-message ${
+                  message.role == "user" ? "user-message" : "bot-message"
+                }`}>
+                <p>{message.content}</p>
+                <p>{message.emotion}</p>
+              </li>
+            ))}
+            <li>{typing && "AI is typing..."}</li>
+          </ul>
         </section>
         <form
           onSubmit={handleSubmit((data) => {
