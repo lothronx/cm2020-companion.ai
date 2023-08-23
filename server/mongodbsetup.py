@@ -104,16 +104,16 @@ def list_all_companion_names():
     return companion_names
 
 
-def get_single_companion_id(user_id):
-    # Accessing the companion_settings collection
-    companion_settings = db['companion_settings']
+# def get_single_companion_id(user_id):
+#     # Accessing the companion_settings collection
+#     companion_settings = db['companion_settings']
     
-    # Querying the collection to find the record with the specified user_id
-    result = companion_settings.find_one({'user_id':user_id})
+#     # Querying the collection to find the record with the specified user_id
+#     result = companion_settings.find_one({'user_id':user_id})
     
-    if result and 'companion_id' in result:
-        return str(result['companion_id'])
-    return None
+#     if result and 'companion_id' in result:
+#         return str(result['companion_id'])
+#     return None
 
 
 ## Functions Relating Messages Database 
@@ -122,11 +122,23 @@ def current_timestamp():
     """Returns the current timestamp in the desired format."""
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+def get_next_message_id(user_id):
+    messages = db['messages']
+    # Adding a filter criteria based on the user_id to fetch the last message for that specific user
+    last_message = messages.find_one({'user_id': user_id}, sort=[('message_id', pymongo.DESCENDING)])
+    
+    if last_message and 'message_id' in last_message:
+        return last_message['message_id'] + 1
+
+    return 1
+
+
 def insert_ai_message(user_id,  message_content):
     """Insert a message from the AI into the messages collection."""
     messages = db['messages']
     message_data = {
         'user_id': user_id,
+        'message_id': get_next_message_id(user_id),
         'sender': 'assistant',
         'timestamp': current_timestamp(),
         'message_content': message_content
@@ -138,6 +150,7 @@ def insert_user_message(user_id, message_content):
     messages = db['messages']
     message_data = {
         'user_id': user_id,
+        'message_id': get_next_message_id(user_id),
         'sender': 'user',
         'timestamp': current_timestamp(),
         'message_content': message_content
@@ -147,36 +160,24 @@ def insert_user_message(user_id, message_content):
 
 
 def get_messages(user_id):
-    """Retrieve all messages for a specific user_id and companion_id."""
+    """Retrieve all messages for a specific user_id."""
     try:
         messages = db['messages']
-        
-        # Convert string IDs to ObjectId
-        # user_id_obj = ObjectId(user_id)
-        # companion_id_obj = ObjectId(companion_id)
 
-        # Find messages based on user_id and companion_id
-        # results = messages.find({ 
-        #     '_id': user_id,
-        #     'chat_id': companion_id_obj
-        # })
         results = messages.find({ 
             'user_id': user_id,
-            # 'companion_id': companion_id
         })
-        
-        # Extracting message content and sender from the results
-        message_data = [{'role': message['sender'].lower(), 'content': message['message_content']} for message in results]
-        
-        # Logging the retrieved results for debugging
-        # print(f"Retrieved {len(message_data)} messages for user_id {user_id} and companion_id {companion_id}.")
+
+        # Return the full message documents as a list
+        message_data = list(results)
+
         print(f"Retrieved {len(message_data)} messages for user_id {user_id}.")
-        
         return message_data
     except Exception as e:
         # Print any exception that occurs
         print(f"An error occurred: {e}")
         return []
+
 
 
 
