@@ -127,7 +127,15 @@ def get_chat_history():
     #     return jsonify({"error": "companion_id not provided"}), 400
 
     messages = get_messages(user_id)
-    return jsonify({"messages": messages}), 200
+    
+    formatted_messages = [{
+        'message_id': message.get('message_id', None),
+        'message_role': message['role'],
+        'message_content': message['content'],
+        'message_timestamp': message.get('timestamp', None)
+    } for message in messages]
+    return jsonify({"messages": formatted_messages}), 200
+
 
 
 
