@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+
 from mongodbsetup import login, insert_user, get_messages, get_single_companion_id
 from chatgptapi import CustomChatGPT
 # from emojify2 import Emoji
@@ -9,9 +11,13 @@ from chatgptapi import CustomChatGPT
 # __name__ is equal to app.py
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'some_unique_and_secret_key'
+app.config['SECRET_KEY'] = 'very_unique_key'
+app.config['JWT_SECRET_KEY'] = 'supersecret_123'  # Change this!
+
 
 CORS(app, resources={r"*": {"origins": "*"}})
+jwt = JWTManager(app)
+
 # emoji_client = Emoji()
 # @app.route("/", methods=['GET'])
 # def home():
@@ -79,7 +85,10 @@ def login_route():
 
     # At this point, the user is authenticated
     session['user_id'] = user_id  # Storing user_id in session
-    return jsonify({"status": "success", "message": "Logged in successfully!", "user_id": user_id}), 200
+
+    # At this point, the user is authenticated
+    access_token = create_access_token(identity=user_id)
+    return jsonify({"status": "success", "message": "Logged in successfully!", "user_id": user_id, "token": access_token}), 200
 
     # Get the companion_id for the logged-in user
     # companion_id = get_single_companion_id(user_id)
@@ -93,7 +102,7 @@ def login_route():
 
 
 # Set OpenAI API Route
-
+@jwt_required()
 @app.route("/api/settings/openapi", methods=["POST"])
 def settings_openapi_route():
     data = request.get_json()
@@ -108,23 +117,28 @@ def test():
 #OpenAI Routes 
 
 #Retreive Messages
+@jwt_required()
 @app.route("/api/chat_history", methods=["GET"])
 def get_chat_history():
     user_id = session.get('user_id')
-    companion_id = request.args["companion_id"]
-    messages = get_messages(user_id, companion_id)
+    
+    # companion_id = request.args.get("companion_id")
+    # if not companion_id:
+    #     return jsonify({"error": "companion_id not provided"}), 400
+
+    messages = get_messages(user_id)
     return jsonify({"messages": messages}), 200
 
 
 
 # Send Message to AI
+@jwt_required()
 @app.route("/api/chat", methods=["POST"])
 def chat_with_ai():
     data = request.get_json()
     user_id = session.get('user_id')
-    companion_id = data["companion_id"]
     user_message = data["message"]
-    ai_response = CustomChatGPT(user_id, companion_id, user_message)
+    ai_response = CustomChatGPT(user_id, user_message)
     return jsonify({"response": ai_response}), 200
 
 
@@ -132,4 +146,3 @@ def chat_with_ai():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    app.secret_key = 'some_random_secret_key'

@@ -36,12 +36,12 @@ else:
 
 ## With Multiple Companions 
 
-def CustomChatGPT(user_id, companion_id, user_input):
+def CustomChatGPT(user_id,  user_input):
     # Add user's message to the database
-    insert_user_message(user_id, companion_id, user_input)
+    insert_user_message(user_id, user_input)
 
     # Retrieve past message contents from the database
-    past_messages = get_messages(user_id, companion_id)
+    past_messages = get_messages(user_id)
 
     # Add the current user's message to the list
     past_messages.append({"role": "user", "content": user_input})
@@ -54,7 +54,7 @@ def CustomChatGPT(user_id, companion_id, user_input):
     ChatGPT_reply = response["choices"][0]["message"]["content"]
 
     # Add assistant's reply to the database
-    insert_ai_message(user_id, companion_id, ChatGPT_reply)
+    insert_ai_message(user_id, ChatGPT_reply)
 
     return ChatGPT_reply
 

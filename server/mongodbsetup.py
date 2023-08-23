@@ -79,12 +79,11 @@ def fetch_user(criteria):
 
 def create_companion(user_id,companion_name, friendliness, humor_level, specific_interests):
 
-    companion_id = str(uuid.uuid4())  # Generate a unique companion_id
+    # companion_id = str(uuid.uuid4())  # Generate a unique companion_id
 
     chat_settings = db['companion_settings']
     chat_settings.insert_one({
         'user_id': user_id,
-        'companion_id': companion_id,
         'companion_name': companion_name,
         'friendliness': friendliness,
         'humor_level': humor_level,
@@ -92,7 +91,7 @@ def create_companion(user_id,companion_name, friendliness, humor_level, specific
     }
     )
 
-    return companion_id
+    return companion_name
 
 
 #T0-DO ( add _id to Identify for that Indivual)
@@ -123,24 +122,22 @@ def current_timestamp():
     """Returns the current timestamp in the desired format."""
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-def insert_ai_message(user_id, companion_id, message_content):
+def insert_ai_message(user_id,  message_content):
     """Insert a message from the AI into the messages collection."""
     messages = db['messages']
     message_data = {
         'user_id': user_id,
-        'companion_id': companion_id,
         'sender': 'assistant',
         'timestamp': current_timestamp(),
         'message_content': message_content
     }
     return messages.insert_one(message_data).inserted_id
 
-def insert_user_message(user_id, companion_id, message_content):
+def insert_user_message(user_id, message_content):
     """Insert a message from the User into the messages collection."""
     messages = db['messages']
     message_data = {
         'user_id': user_id,
-        'companion_id': companion_id,
         'sender': 'user',
         'timestamp': current_timestamp(),
         'message_content': message_content
@@ -149,7 +146,7 @@ def insert_user_message(user_id, companion_id, message_content):
 
 
 
-def get_messages(user_id, companion_id):
+def get_messages(user_id):
     """Retrieve all messages for a specific user_id and companion_id."""
     try:
         messages = db['messages']
@@ -165,14 +162,15 @@ def get_messages(user_id, companion_id):
         # })
         results = messages.find({ 
             'user_id': user_id,
-            'companion_id': companion_id
+            # 'companion_id': companion_id
         })
         
         # Extracting message content and sender from the results
         message_data = [{'role': message['sender'].lower(), 'content': message['message_content']} for message in results]
         
         # Logging the retrieved results for debugging
-        print(f"Retrieved {len(message_data)} messages for user_id {user_id} and companion_id {companion_id}.")
+        # print(f"Retrieved {len(message_data)} messages for user_id {user_id} and companion_id {companion_id}.")
+        print(f"Retrieved {len(message_data)} messages for user_id {user_id}.")
         
         return message_data
     except Exception as e:
