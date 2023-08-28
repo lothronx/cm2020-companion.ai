@@ -19,16 +19,16 @@ def test_modules():
     # insert_user(user_username, user_email, password_hashed)
 
     
-    # user_email = 'test265rt@example.com'
-    # password_hashed = 'testpassword'
+    user_email = 'test265rt@example.com'
+    password_hashed = 'testpassword'
 
-    # # Login 
-    # success, user_id = login(user_email, password_hashed)
+    # Login 
+    success, user_id = login(user_email, password_hashed)
 
-    # if success:
-    #     print(f"User ID retrieved: {user_id}")
-    # else:
-    #     print("Login failed or user not found.")
+    if success:
+        print(f"User ID retrieved: {user_id}")
+    else:
+        print("Login failed or user not found.")
 
 
     # # 2. Set up companion settings
@@ -43,20 +43,21 @@ def test_modules():
     # print(f"Created companion with ID: {companion_id}\n")
 
     # companion_id = "bd858874-2720-4e15-b009-f98edd790d3b"
+    # user_id = "64de769fa8b4379871d54091"
 
     # # 3. Send a message from a user to the AI and get a reply
-    # user_input = "How old am I?"
+    # user_input = "How are you??"
     # print("Sending message to AI...")
-    # ai_response = CustomChatGPT(user_id, companion_id, user_input)
+    # ai_response = CustomChatGPT(user_id, user_input)
     # print(f"AI replied: {ai_response}\n")
 
     # # Inserting the user message into the database
-    # insert_user_message(user_id, companion_id, user_input)
+    # insert_user_message(user_id,  user_input)
     # # Inserting the AI message into the database
-    # insert_ai_message(user_id, companion_id, ai_response)
+    # insert_ai_message(user_id,  ai_response)
 
     # 4. Retrieve all messages for a specific user and companion
-    user_id = "64de769fa8b4379871d54091"
+
     print("Fetching messages from the database...")
     messages = get_messages(user_id)
     print(messages)
