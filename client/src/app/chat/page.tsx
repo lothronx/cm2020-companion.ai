@@ -127,12 +127,14 @@ export default function Chat() {
 
   return (
     <>
-      <header>
-        <Link href="/settings">
+      <header className="navbar bg-base-100 h-10px">
+        <Link className="navbar-start " href="/settings">
           <MdOutlineArrowBackIos />
         </Link>
-        <AiOutlineRobot />
-        <p>Compaion.ai</p>
+        <div className="navbar-end">
+          <AiOutlineRobot />
+          <p className="  text-primary font-bold text-2xl mx-1">Compaion.ai</p>
+        </div>
       </header>
 
       <main>
