@@ -137,19 +137,19 @@ export default function Chat() {
         </div>
       </header>
 
-      <main>
-        <section>
-          <header className="flex flex-col justify-center footer-center h-1/2vh text-xs">
+      <main className="md:container md:mx-auto shadow-lg rounded-lg bg-base-100 px-4 ">
+        <section className="flex flex-col w-full h-screen ">
+          <header className="text-center h-1/2vh text-xs my-3">
             Companion.ai is powered by OpenAI. <br />
             Everything AI says is not real.
           </header>
-          <ul>
+          <ul className="w-full space-y-1.5">
             {messages.map((message) => (
               <li
                 key={message.id}
                 className={`text-s
                  ${
-                   message.role == "user" ? "text-primary bg-base-100" : "bg-primary text-base-100"
+                   message.role == "user" ? " text-primary text-right break-all " : " bg-primary text-base-100 text-left rounded break-all"
                  }`}>
                 <p>{message.content}</p>
                 <p>{message.emotion}</p>
@@ -159,18 +159,20 @@ export default function Chat() {
           </ul>
         </section>
         <form
+          className="flex flex-row   w-full rounded text-sm h-10 "
           onSubmit={handleSubmit((data) => {
             onSubmit(data);
             reset();
           })}>
           <input
+            className="w-full rounded my-2"
             {...register("content")}
             type="text"
             name="content"
             id="content"
             placeholder="Type your message here..."
           />
-          <button type="submit" disabled={isSubmitting || isTyping}>
+          <button className="btn-lg self-center" type="submit" disabled={isSubmitting || isTyping}>
             <MdArrowCircleUp />
           </button>
         </form>
