@@ -77,7 +77,7 @@ export default function Register() {
   };
 
   return (
-    <main className="flex flex-col justify-center items-center h-1/2vh">
+    <main className="flex flex-col justify-center items-center h-screen">
       <h1 className="text-primary font-bold text-2xl mb-5">Welcome to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
@@ -126,10 +126,10 @@ export default function Register() {
         </div>
         <div>
           {registerErr && <p>{registerErr}</p>}
-          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+          <button className="btn btn-primary sm:btn-sm md:btn-md lg:btn-lg" type="submit" disabled={isSubmitting}>
             Sign up
           </button>
-          <Link className="btn text-primary" href="/login">
+          <Link className="btn text-primary sm:btn-sm md:btn-md lg:btn-lg" href="/login">
             Already registered
           </Link>
         </div>
