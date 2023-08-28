@@ -53,8 +53,8 @@ export default function Login() {
   };
 
   return (
-    <main className="flex flex-col justify-center items-center h-1/2vh">
-      <h1 className="text-primary font-bold text-2xl">Welcome back to Companion.ai</h1>
+    <main className="flex flex-col justify-center items-center h-screen">
+      <h1 className="text-primary font-bold text-2xl mb-5">Welcome back to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="email">Email</label>
@@ -80,10 +80,10 @@ export default function Login() {
         </div>
         <div>
           {loginErr && <p>{loginErr}</p>}
-          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+          <button className="btn btn-primary sm:btn-sm md:btn-md lg:btn-lg" type="submit" disabled={isSubmitting}>
             Log in
           </button>
-          <Link className="btn text-primary" href="/register">
+          <Link className="btn text-primary sm:btn-sm md:btn-md lg:btn-lg" href="/register">
             I am a new user
           </Link>
         </div>
