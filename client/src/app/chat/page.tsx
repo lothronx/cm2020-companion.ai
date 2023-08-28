@@ -5,6 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import { MdOutlineArrowBackIos, MdArrowCircleUp } from "react-icons/md";
 import { AiOutlineRobot } from "react-icons/ai";
+import { useSession } from "next-auth/react";
 
 interface Message {
   id: number;
@@ -14,7 +15,16 @@ interface Message {
   emotion: string;
 }
 
+interface user {
+  status: string;
+  message: string;
+  user_id: string;
+  token: string;
+}
+
 export default function Chat() {
+  const { data: session } = useSession();
+
   // useState
   const [messages, setMessages] = useState([
     {
@@ -54,15 +64,16 @@ export default function Chat() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/api/chat", {
+        const response = await fetch("http://127.0.0.1:5000/api/chat_history", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.token}`,
           },
         });
 
         const recentMessageHistory: Message[] = await response.json();
-
+        console.log(recentMessageHistory);
         setMessages((messages) => [
           ...messages,
           ...recentMessageHistory.map((message) => ({
@@ -74,7 +85,7 @@ export default function Chat() {
           })),
         ]);
       } catch (err) {
-        console.log(err);
+        console.error("Error fetching messages:", err);
       }
     };
 
@@ -149,13 +160,15 @@ export default function Chat() {
                 key={message.id}
                 className={`text-s
                  ${
-                   message.role == "user" ? " text-primary text-right break-all " : " bg-primary text-base-100 text-left rounded break-all"
+                   message.role == "user"
+                     ? " text-primary text-right break-all "
+                     : " bg-primary text-base-100 text-left rounded break-all"
                  }`}>
                 <p>{message.content}</p>
                 <p>{message.emotion}</p>
               </li>
             ))}
-            <li className="text-slate-600 text-xs" >{isTyping && "AI is typing..."}</li>
+            <li className="text-slate-600 text-xs">{isTyping && "AI is typing..."}</li>
           </ul>
         </section>
         <form

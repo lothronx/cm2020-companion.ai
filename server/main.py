@@ -1,18 +1,23 @@
 from flask import Flask, render_template, request, jsonify, session
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import (
+    JWTManager,
+    jwt_required,
+    create_access_token,
+    get_jwt_identity,
+)
 
-from mongodbsetup import login, insert_user, get_messages, get_single_companion_id
+from mongodbsetup import login, insert_user, get_messages
 from chatgptapi import CustomChatGPT
-# from emojify2 import Emoji
 
+# from emojify2 import Emoji
 
 
 # __name__ is equal to app.py
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'very_unique_key'
-app.config['JWT_SECRET_KEY'] = 'supersecret_123'  # Change this!
+app.config["SECRET_KEY"] = "very_unique_key"
+app.config["JWT_SECRET_KEY"] = "supersecret_123"  # Change this!
 
 
 CORS(app, resources={r"*": {"origins": "*"}})
@@ -70,25 +75,40 @@ def create_user_route():
 @app.route("/api/login", methods=["POST"])
 def login_route():
     data = request.get_json()
-    
+
     # Ensure email and password are provided
     if not all(key in data for key in ["email", "password"]):
-        return jsonify({"status": "error", "message": "Email and password required!"}), 400
-
+        return (
+            jsonify({"status": "error", "message": "Email and password required!"}),
+            400,
+        )
 
     email = data["email"]
     password = data["password"]
 
     authenticated, user_id = login(email, password)
     if not authenticated:
-        return jsonify({"status": "failure", "message": "Invalid email or password!"}), 401
+        return (
+            jsonify({"status": "failure", "message": "Invalid email or password!"}),
+            401,
+        )
 
     # At this point, the user is authenticated
-    session['user_id'] = user_id  # Storing user_id in session
+    session["user_id"] = user_id  # Storing user_id in session
 
     # At this point, the user is authenticated
     access_token = create_access_token(identity=user_id)
-    return jsonify({"status": "success", "message": "Logged in successfully!", "user_id": user_id, "token": access_token}), 200
+    return (
+        jsonify(
+            {
+                "status": "success",
+                "message": "Logged in successfully!",
+                "user_id": user_id,
+              
+            }
+        ),
+        200,
+    )
 
     # Get the companion_id for the logged-in user
     # companion_id = get_single_companion_id(user_id)
@@ -108,35 +128,39 @@ def settings_openapi_route():
     data = request.get_json()
     return jsonify({"status": "success"}), 200
 
-# Server Testing Route 
+
+# Server Testing Route
 @app.route("/test", methods=["GET"])
 def test():
     return "It's working", 200
 
 
-#OpenAI Routes 
+# OpenAI Routes
 
-#Retreive Messages
-@jwt_required()
+
+# Retreive Messages
+
 @app.route("/api/chat_history", methods=["GET"])
+@jwt_required()
 def get_chat_history():
-    user_id = session.get('user_id')
-    
+    current_user = get_jwt_identity()
+
     # companion_id = request.args.get("companion_id")
     # if not companion_id:
     #     return jsonify({"error": "companion_id not provided"}), 400
 
-    messages = get_messages(user_id)
-    
-    formatted_messages = [{
-        'message_id': message.get('message_id', None),
-        'message_role': message['role'],
-        'message_content': message['content'],
-        'message_timestamp': message.get('timestamp', None)
-    } for message in messages]
+    messages = get_messages(current_user)
+
+    formatted_messages = [
+        {
+            "message_id": message.get("message_id", None),
+            "message_role": message["role"],
+            "message_content": message["content"],
+            "message_timestamp": message.get("timestamp", None),
+        }
+        for message in messages
+    ]
     return jsonify({"messages": formatted_messages}), 200
-
-
 
 
 # Send Message to AI
@@ -144,12 +168,10 @@ def get_chat_history():
 @app.route("/api/chat", methods=["POST"])
 def chat_with_ai():
     data = request.get_json()
-    user_id = session.get('user_id')
+    user_id = session.get("user_id")
     user_message = data["message"]
     ai_response = CustomChatGPT(user_id, user_message)
     return jsonify({"response": ai_response}), 200
-
-
 
 
 if __name__ == "__main__":
