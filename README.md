@@ -15,6 +15,9 @@ cd server
 
 Create a python virtual environment:
 ```bash
+virtualenv -p python3.9 env
+```
+```bash
 source env/bin/activate
 ```
 Please double check and make sure you are using the python virtual environment before proceeding.
