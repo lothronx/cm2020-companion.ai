@@ -4,7 +4,7 @@
 
 .btn {
   @apply rounded-full;
-  width: 20vw;
+  width: 35vw;
   padding: 1vw;
   margin-bottom: 0.5vh;
   margin-top: 0.5vh;

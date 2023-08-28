@@ -12,13 +12,13 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col justify-center items-center h-1/2vh">
+    <main className="flex flex-col justify-center items-center h-screen">
       <h1 className="text-primary font-bold text-2xl">Companion.ai</h1>
-      <p className="font-light">The AI Companion who can detect your emotions</p>
-      <Link className="centered-main btn btn-primary" href="/register">
+      <p className="font-light mb-5">The AI Companion who can detect your emotions</p>
+      <Link className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg" href="/register">
         Register
       </Link>
-      <Link className="centered-main btn btn-primary" href="/login">
+      <Link className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg" href="/login">
         Log in
       </Link>
     </main>
