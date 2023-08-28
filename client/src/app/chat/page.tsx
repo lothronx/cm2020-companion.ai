@@ -155,7 +155,7 @@ export default function Chat() {
                 <p>{message.emotion}</p>
               </li>
             ))}
-            <li>{isTyping && "AI is typing..."}</li>
+            <li className="text-slate-600 text-xs" >{isTyping && "AI is typing..."}</li>
           </ul>
         </section>
         <form
