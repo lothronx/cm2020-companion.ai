@@ -104,7 +104,8 @@ def login_route():
                 "status": "success",
                 "message": "Logged in successfully!",
                 "user_id": user_id,
-              
+                "username": "username",
+                "access_token": access_token,
             }
         ),
         200,
