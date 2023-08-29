@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import (
     JWTManager,
@@ -86,7 +86,7 @@ def login_route():
     email = data["email"]
     password = data["password"]
 
-    authenticated, user_id = login(email, password)
+    authenticated, user_id, username = login(email, password)
     if not authenticated:
         return (
             jsonify({"status": "failure", "message": "Invalid email or password!"}),
@@ -94,7 +94,7 @@ def login_route():
         )
 
     # At this point, the user is authenticated
-    session["user_id"] = user_id  # Storing user_id in session
+    # session["user_id"] = user_id  # Storing user_id in session
 
     # At this point, the user is authenticated
     access_token = create_access_token(identity=user_id)
@@ -104,22 +104,13 @@ def login_route():
                 "status": "success",
                 "message": "Logged in successfully!",
                 "user_id": user_id,
-                "username": "username",
+                "username": username,
                 "access_token": access_token,
             }
         ),
         200,
     )
 
-    # Get the companion_id for the logged-in user
-    # companion_id = get_single_companion_id(user_id)
-    # if not companion_id:
-    #     return jsonify({"status": "error", "message": "No companions found"}), 400
-
-    # # At this point, the companion ID is found
-    # session['companion_id'] = companion_id  # Storing companion_id in session
-
-    # return jsonify({"status": "success", "user_id": user_id, "companion_id": {companion_id}}), 200
 
 
 # Set OpenAI API Route
@@ -169,9 +160,9 @@ def get_chat_history():
 @app.route("/api/chat", methods=["POST"])
 def chat_with_ai():
     data = request.get_json()
-    user_id = session.get("user_id")
+    current_user = get_jwt_identity()
     user_message = data["message"]
-    ai_response = CustomChatGPT(user_id, user_message)
+    ai_response = CustomChatGPT(current_user, user_message)
     return jsonify({"response": ai_response}), 200
 
 

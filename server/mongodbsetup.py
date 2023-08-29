@@ -51,11 +51,12 @@ def login(email, password):
         # Check if the provided password, when hashed, matches the stored hashed password
         if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
             user_id = str(user['_id'])  # Convert ObjectId to its string representation
-            return True, user_id
+            username = user['username']
+            return True, user_id, username
         else:
-            return False, None
+            return False, None, None
     else:
-        return False, None
+        return False, None, None
 
 
 
