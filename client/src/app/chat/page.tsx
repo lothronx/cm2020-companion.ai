@@ -15,16 +15,9 @@ interface Message {
   emotion: string;
 }
 
-interface user {
-  status: string;
-  message: string;
-  user_id: string;
-  token: string;
-}
-
 export default function Chat() {
   const { data: session } = useSession();
-
+  console.log(session?.user);
   // useState
   const [messages, setMessages] = useState([
     {
@@ -68,22 +61,22 @@ export default function Chat() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.token}`,
+            Authorization: session?.user.access_token as string,
           },
         });
 
         const recentMessageHistory: Message[] = await response.json();
-        console.log(recentMessageHistory);
-        setMessages((messages) => [
-          ...messages,
-          ...recentMessageHistory.map((message) => ({
-            id: message.id,
-            content: message.content,
-            role: message.role,
-            timestamp: message.timestamp,
-            emotion: message.emotion,
-          })),
-        ]);
+        console.log("recent message history: " + recentMessageHistory);
+        // setMessages((messages) => [
+        //   ...messages,
+        //   ...recentMessageHistory.map((message) => ({
+        //     id: message.id,
+        //     content: message.content,
+        //     role: message.role,
+        //     timestamp: message.timestamp,
+        //     emotion: message.emotion,
+        //   })),
+        // ]);
       } catch (err) {
         console.error("Error fetching messages:", err);
       }

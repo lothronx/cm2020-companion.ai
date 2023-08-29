@@ -112,7 +112,6 @@ def login_route():
     )
 
 
-
 # Set OpenAI API Route
 @jwt_required()
 @app.route("/api/settings/openapi", methods=["POST"])
@@ -131,6 +130,7 @@ def test():
 
 
 # Retreive Messages
+
 
 @app.route("/api/chat_history", methods=["GET"])
 @jwt_required()

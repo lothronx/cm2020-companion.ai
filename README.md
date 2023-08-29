@@ -31,7 +31,7 @@ Run the server:
 ```bash
 python main.py
 ```
-Open [http://127.0.0.1:5000/](http://127.0.0.1:5000/) with your browser to see the result.
+Open [http://127.0.0.1:5000/test](http://127.0.0.1:5000/test) with your browser to see the result.
 
 ### Frontend:
 Open a new terminal:
