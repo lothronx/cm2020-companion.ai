@@ -78,7 +78,7 @@ export default function Register() {
 
   return (
     <main className="flex flex-col justify-center items-center h-screen">
-      <h1 className="text-primary font-bold text-2xl mb-5">Welcome to Companion.ai</h1>
+      <h1 className="text-primary font-bold text-4xl mb-5">Welcome to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
           <label htmlFor="username">Username</label>

@@ -130,32 +130,32 @@ export default function Chat() {
   };
 
   return (
-    <>
-      <header className="navbar bg-base-100 h-10px">
-        <Link className="navbar-start " href="/settings">
-          <MdOutlineArrowBackIos />
+    <div className="h-screen md:container md:mx-auto shadow-lg rounded-lg">
+      <header className="grid grid-cols-3 content-center bg-primary text-base-100 px-10 py-2">
+        <Link href="/settings" className="justify-self-start grid content-center">
+          <MdOutlineArrowBackIos className="text-3xl" />
         </Link>
-        <div className="navbar-end">
-          <AiOutlineRobot />
-          <p className="  text-primary font-bold text-2xl mx-1">Compaion.ai</p>
+        <div className="flex flex-col items-center">
+          <AiOutlineRobot className="text-5xl" />
+          <p className="mx-1">Compaion.ai</p>
         </div>
       </header>
 
-      <main className="md:container md:mx-auto shadow-lg rounded-lg bg-base-100 px-4 ">
-        <section className="flex flex-col w-full h-screen ">
-          <header className="text-center h-1/2vh text-xs my-3">
+      <main className="bg-base-100 px-4 h-5/6">
+        <section className="flex flex-col w-full h-full overflow-auto">
+          <header className="text-center text-xs text-primary my-3">
             Companion.ai is powered by OpenAI. <br />
             Everything AI says is not real.
           </header>
-          <ul className="w-full space-y-1.5">
+          <ul className="w-full space-y-1.5 grid grid-cols-6">
             {messages.map((message) => (
               <li
                 key={message.id}
-                className={`text-s
+                className={`text-s px-4 py-2 break-words rounded-xl border border-dashed border-primary
                  ${
                    message.role == "user"
-                     ? " text-primary text-right break-all "
-                     : " bg-primary text-base-100 text-left rounded break-all"
+                     ? " text-primary bg-base-10 text-right col-start-3 col-end-7 justify-self-end"
+                     : " bg-primary text-base-100 text-left col-start-1 col-end-5 justify-self-start"
                  }`}>
                 <p>{message.content}</p>
                 <p>{message.emotion}</p>
@@ -165,24 +165,27 @@ export default function Chat() {
           </ul>
         </section>
         <form
-          className="flex flex-row   w-full rounded text-sm h-10 "
+          className="relative w-full h-10 p-2"
           onSubmit={handleSubmit((data) => {
             onSubmit(data);
             reset();
           })}>
           <input
-            className="w-full rounded my-2"
+            className="w-full rounded p-4 text-sm"
             {...register("content")}
             type="text"
             name="content"
             id="content"
             placeholder="Type your message here..."
           />
-          <button className="btn-lg self-center" type="submit" disabled={isSubmitting || isTyping}>
-            <MdArrowCircleUp />
+          <button
+            className="absolute inset-y-0 right-0 p-4"
+            type="submit"
+            disabled={isSubmitting || isTyping}>
+            <MdArrowCircleUp className="text-4xl text-primary" />
           </button>
         </form>
       </main>
-    </>
+    </div>
   );
 }
