@@ -141,12 +141,13 @@ def get_chat_history():
     formatted_messages = [
         {
             "message_id": message.get("message_id", None),
-            "message_role": message.get("role", "default_value"),
-            "message_content": message.get("content", "default_value"),
+            "message_sender": message.get("sender", "default_value"),
+            "message_content": message.get("message_content", "default_value"),
             "message_timestamp": message.get("timestamp", None),
         }
         for message in messages
     ]
+    print(({"messages": formatted_messages}))
     return jsonify({"messages": formatted_messages}), 200
 
 
