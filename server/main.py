@@ -145,7 +145,7 @@ def get_chat_history():
             "content": message.get("message_content", "default_value"),
             "role": message.get("sender", "default_value"),
             "timestamp": message.get("timestamp", None),
-            "emotion": "😄"
+            "emotion": ""
         }
         for message in messages
     ]
