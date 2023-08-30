@@ -17,32 +17,9 @@ interface Message {
 
 export default function Chat() {
   const { data: session } = useSession();
-  console.log(session?.user);
+
   // useState
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      content:
-        "Hi, I am your ai companion who can detect your emotions. How are you feeling today?",
-      role: "bot",
-      timestamp: "2020-10-10 10:10:10",
-      emotion: "",
-    },
-    {
-      id: 2,
-      content: "Hi, I am feeling good",
-      role: "user",
-      timestamp: "2020-10-10 10:10:10",
-      emotion: "😄",
-    },
-    {
-      id: 3,
-      content: "What did you do today",
-      role: "bot",
-      timestamp: "2020-10-10 10:10:10",
-      emotion: "",
-    },
-  ]);
+  const [messages, setMessages] = useState([] as Message[]);
   const [isTyping, setIsTyping] = useState(false);
 
   // useForm
@@ -66,17 +43,16 @@ export default function Chat() {
         });
 
         const recentMessageHistory: Message[] = await response.json();
-        console.log("recent message history: " + recentMessageHistory);
-        // setMessages((messages) => [
-        //   ...messages,
-        //   ...recentMessageHistory.map((message) => ({
-        //     id: message.id,
-        //     content: message.content,
-        //     role: message.role,
-        //     timestamp: message.timestamp,
-        //     emotion: message.emotion,
-        //   })),
-        // ]);
+
+        setMessages(
+          recentMessageHistory.map((message) => ({
+            id: message.id,
+            content: message.content,
+            role: message.role,
+            timestamp: message.timestamp,
+            emotion: message.emotion,
+          }))
+        );
       } catch (err) {
         console.error("Error fetching messages:", err);
       }
@@ -105,24 +81,25 @@ export default function Chat() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user.access_token as string}`,
         },
         body: JSON.stringify(data),
       });
 
       const newMessages: Message[] = await response.json();
+      console.log(newMessages);
+      // setIsTyping(false);
 
-      setIsTyping(false);
-
-      setMessages((messages) => [
-        ...messages.slice(0, -1),
-        ...newMessages.map((message) => ({
-          id: message.id,
-          content: message.content,
-          role: message.role,
-          timestamp: message.timestamp,
-          emotion: message.emotion,
-        })),
-      ]);
+      // setMessages((messages) => [
+      //   ...messages.slice(0, -1),
+      //   ...newMessages.map((message) => ({
+      //     id: message.id,
+      //     content: message.content,
+      //     role: message.role,
+      //     timestamp: message.timestamp,
+      //     emotion: message.emotion,
+      //   })),
+      // ]);
     } catch (err) {
       console.log(err);
       setIsTyping(false);
@@ -161,7 +138,9 @@ export default function Chat() {
                 <p>{message.emotion}</p>
               </li>
             ))}
-            <li className="text-slate-600 text-xs">{isTyping && "AI is typing..."}</li>
+            <li className="text-slate-600 text-xs px-4 py-2 col-start-1 col-end-5 justify-self-start">
+              {isTyping && "AI is typing..."}
+            </li>
           </ul>
         </section>
         <form

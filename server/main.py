@@ -131,6 +131,7 @@ def test():
 
 # Retreive Messages
 
+
 @app.route("/api/chat_history", methods=["GET"])
 @jwt_required()
 def get_chat_history():
@@ -140,15 +141,14 @@ def get_chat_history():
 
     formatted_messages = [
         {
-            "message_id": message.get("message_id", None),
-            "message_sender": message.get("sender", "default_value"),
-            "message_content": message.get("message_content", "default_value"),
-            "message_timestamp": message.get("timestamp", None),
+            "id": message.get("message_id", None),
+            "role": message.get("sender", "default_value"),
+            "content": message.get("message_content", "default_value"),
+            "timestamp": message.get("timestamp", None),
         }
         for message in messages
     ]
-    print(({"messages": formatted_messages}))
-    return jsonify({"messages": formatted_messages}), 200
+    return jsonify(formatted_messages), 200
 
 
 # Send Message to AI
