@@ -61,7 +61,7 @@ export default function Chat() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: session?.user.access_token as string,
+            Authorization: `Bearer ${session?.user.access_token as string}`,
           },
         });
 

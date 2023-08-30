@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, make_response
 from flask_cors import CORS
 from flask_jwt_extended import (
     JWTManager,
@@ -131,23 +131,18 @@ def test():
 
 # Retreive Messages
 
-
 @app.route("/api/chat_history", methods=["GET"])
 @jwt_required()
 def get_chat_history():
     current_user = get_jwt_identity()
-
-    # companion_id = request.args.get("companion_id")
-    # if not companion_id:
-    #     return jsonify({"error": "companion_id not provided"}), 400
 
     messages = get_messages(current_user)
 
     formatted_messages = [
         {
             "message_id": message.get("message_id", None),
-            "message_role": message["role"],
-            "message_content": message["content"],
+            "message_role": message.get("role", "default_value"),
+            "message_content": message.get("content", "default_value"),
             "message_timestamp": message.get("timestamp", None),
         }
         for message in messages
@@ -156,8 +151,8 @@ def get_chat_history():
 
 
 # Send Message to AI
-@jwt_required()
 @app.route("/api/chat", methods=["POST"])
+@jwt_required()
 def chat_with_ai():
     data = request.get_json()
     current_user = get_jwt_identity()
