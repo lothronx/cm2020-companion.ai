@@ -142,9 +142,10 @@ def get_chat_history():
     formatted_messages = [
         {
             "id": message.get("message_id", None),
-            "role": message.get("sender", "default_value"),
             "content": message.get("message_content", "default_value"),
+            "role": message.get("sender", "default_value"),
             "timestamp": message.get("timestamp", None),
+            "emotion": "😄"
         }
         for message in messages
     ]
@@ -157,7 +158,7 @@ def get_chat_history():
 def chat_with_ai():
     data = request.get_json()
     current_user = get_jwt_identity()
-    user_message = data["message"]
+    user_message = data["content"]
     ai_response = CustomChatGPT(current_user, user_message)
     return jsonify({"response": ai_response}), 200
 
