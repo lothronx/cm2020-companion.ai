@@ -157,8 +157,8 @@ def get_chat_history():
 @jwt_required()
 def chat_with_ai():
     data = request.get_json()
-    current_user = get_jwt_identity()
     user_message = data["content"]
+    current_user = get_jwt_identity()
     ai_response = CustomChatGPT(current_user, user_message)
     return jsonify({"response": ai_response}), 200
 
