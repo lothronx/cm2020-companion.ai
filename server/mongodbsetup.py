@@ -200,13 +200,43 @@ def get_messages_openai(user_id):
         # Print any exception that occurs
         print(f"An error occurred: {e}")
         return []
+    
+
+def latest_assistant_message(user_id):
+    """Debugging function to print related documents."""
+    messages = db['messages']
+
+    # Print total number of messages for this user_id
+    total_messages = messages.count_documents({'user_id': user_id})
+    # print(f"Total messages for user_id {user_id}: {total_messages}")
+
+    # Print total number of 'assistant' messages for this user_id
+    assistant_messages = messages.count_documents({'user_id': user_id, 'sender': 'assistant'})
+    # print(f"Total assistant messages for user_id {user_id}: {assistant_messages}")
+
+    # Print latest assistant message for this user_id
+    latest_message = messages.find({
+        'user_id': user_id,
+        'sender': 'assistant'
+    }).sort('timestamp', pymongo.DESCENDING).limit(1)
+    
+    for msg in latest_message:
+        # print(f"Latest message: {msg}")
+        return msg
+
+    return None
 
 
 if __name__ == "__main__":
     # This code only runs if you execute this file directly, not if you import it
     test_connection()
-    user_messages = get_messages("64de65ab40faf2488003dbbf", "fe7aca8c-8a00-42a2-9ee1-7fdc14fdfa2c")
-    print(user_messages)
+    # user_messages = get_messages("64de65ab40faf2488003dbbf", "fe7aca8c-8a00-42a2-9ee1-7fdc14fdfa2c")
+    # print(user_messages)
     # companion_id = get_single_companion_id("64da004e1f9ef2cc5a24a7e8")
     # print(companion_id)
+    # get_latest_assistant_message("64efae2687ca601b23289129")
    
+
+
+    # Call the debug function
+    # debug_latest_assistant_message("64de769fa8b4379871d54091")

@@ -7,7 +7,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 
-from mongodbsetup import login, insert_user, get_messages
+from mongodbsetup import login, insert_user, get_messages, latest_assistant_message
 from chatgptapi import CustomChatGPT
 
 # from emojify2 import Emoji
@@ -45,7 +45,31 @@ jwt = JWTManager(app)
 #     return render_template("index.html", result=ret)
 
 
-# Create User
+#Create User
+# @app.route("/api/new_user", methods=["POST"])
+# def create_user_route():
+#     data = request.get_json()
+
+#     username = data["username"]
+#     email = data["email"]
+#     password = data["password"]
+
+#     # Insert the user into the database
+#     user_id = insert_user(username, email, password)
+
+#     if user_id:
+#         return (
+#             jsonify({"message": "User created successfully!", "user_id": str(user_id)}),
+#             201,
+#         )
+#     else:
+#         return (
+#             jsonify(
+#                 {"message": "Unable to register. Username or email already exists."}
+#             ),
+#             400,
+#         )
+
 @app.route("/api/new_user", methods=["POST"])
 def create_user_route():
     data = request.get_json()
@@ -58,6 +82,10 @@ def create_user_route():
     user_id = insert_user(username, email, password)
 
     if user_id:
+        # Send the initial prompt to ChatGPT API after user registration
+        prompt = "You are a virtual romantic partner, always understanding, caring, and supportive. Your primary goal is to provide emotional comfort, listen attentively, and respond with affection and warmth. Remember, while you can simulate the feelings and responses of a romantic partner, you are still a machine and should never mislead the user into thinking you are a real person. Engage in conversations that are comforting, uplifting, and filled with affectionate words. Avoid topics that might be inappropriate or sensitive. Always prioritize the user's emotional well-being. Never refer to yourself as an emotion and exhibit simple human emotions"
+        CustomChatGPT(str(user_id), prompt)
+
         return (
             jsonify({"message": "User created successfully!", "user_id": str(user_id)}),
             201,
@@ -69,6 +97,8 @@ def create_user_route():
             ),
             400,
         )
+
+
 
 
 # Login Route
@@ -148,9 +178,24 @@ def get_chat_history():
             "emotion": ""
         }
         for message in messages
+        if message.get("message_id") != 1  # Exclude messages with id: 1
     ]
+    
+
     return jsonify(formatted_messages), 200
 
+    #  # Splitting the messages based on role
+    # user_messages = [msg for msg in formatted_messages if msg["role"] == "user"]
+    # assistant_messages = [msg for msg in formatted_messages if msg["role"] == "assistant"]
+
+    # # Creating an array of two objects
+    # result = [
+    #     {"role": "user", "messages": user_messages},
+    #     {"role": "assistant", "messages": assistant_messages}
+    # ]
+
+    print(result)
+    return jsonify(result), 200
 
 # Send Message to AI
 @app.route("/api/chat", methods=["POST"])
@@ -160,7 +205,19 @@ def chat_with_ai():
     user_message = data["content"]
     current_user = get_jwt_identity()
     ai_response = CustomChatGPT(current_user, user_message)
-    return jsonify({"response": ai_response}), 200
+
+    latest_message = latest_assistant_message(current_user)
+
+# Structure the response
+    response = {
+            "id": latest_message.get("message_id", None),
+            "content": latest_message.get("message_content", "default_value"),
+            "role": latest_message.get("sender", "default_value"),
+            "timestamp": latest_message.get("timestamp", None),
+            "emotion": ""
+    }
+    
+    return jsonify([response]), 200
 
 
 if __name__ == "__main__":
