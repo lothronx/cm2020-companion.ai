@@ -178,7 +178,7 @@ def get_chat_history():
             "emotion": ""
         }
         for message in messages
-        if message.get("message_id") != 1  # Exclude messages with id: 1
+        # if message.get("message_id") != 1  # Exclude messages with id: 1
     ]
     
 

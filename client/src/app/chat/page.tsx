@@ -93,16 +93,16 @@ export default function Chat() {
       console.log(newMessages);
       setIsTyping(false);
 
-      // setMessages((messages) => [
-      //   ...messages.slice(0, -1),
-      //   ...newMessages.map((message) => ({
-      //     id: message.id,
-      //     content: message.content,
-      //     role: message.role,
-      //     timestamp: message.timestamp,
-      //     emotion: message.emotion,
-      //   })),
-      // ]);
+      setMessages((messages) => [
+        ...messages.slice(0, -1),
+        ...newMessages.map((message) => ({
+          id: message.id,
+          content: message.content,
+          role: message.role,
+          timestamp: message.timestamp,
+          emotion: message.emotion,
+        })),
+      ]);
     } catch (err) {
       console.log(err);
       setIsTyping(false);
