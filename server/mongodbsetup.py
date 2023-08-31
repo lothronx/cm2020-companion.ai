@@ -226,6 +226,30 @@ def latest_assistant_message(user_id):
 
     return None
 
+def latest_user_message(user_id):
+    """Debugging function to print related documents."""
+    messages = db['messages']
+
+    # Print total number of messages for this user_id
+    total_messages = messages.count_documents({'user_id': user_id})
+    # print(f"Total messages for user_id {user_id}: {total_messages}")
+
+    # Print total number of 'assistant' messages for this user_id
+    assistant_messages = messages.count_documents({'user_id': user_id, 'sender': 'user'})
+    # print(f"Total assistant messages for user_id {user_id}: {assistant_messages}")
+
+    # Print latest assistant message for this user_id
+    latest_message = messages.find({
+        'user_id': user_id,
+        'sender': 'user'
+    }).sort('timestamp', pymongo.DESCENDING).limit(1)
+    
+    for msg in latest_message:
+        # print(f"Latest message: {msg}")
+        return msg
+
+    return None
+
 
 if __name__ == "__main__":
     # This code only runs if you execute this file directly, not if you import it
