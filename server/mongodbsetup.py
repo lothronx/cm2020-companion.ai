@@ -131,7 +131,7 @@ def get_next_message_id(user_id):
     if last_message and 'message_id' in last_message:
         return last_message['message_id'] + 1
 
-    return 1
+    return 0
 
 
 def insert_ai_message(user_id,  message_content):
