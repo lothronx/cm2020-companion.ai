@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 export default function Settings() {
+  // load the next-auth session
+  const { data: session } = useSession();
+
   // use state to handle the Open API modal
   const [isAPIModalOpen, setIsAPIModalOpen] = useState(false);
 
@@ -18,6 +21,7 @@ export default function Settings() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.user.access_token as string}`,
       },
       body: JSON.stringify({ apiKey: apiKey }),
     }).then((res) => res.json());
