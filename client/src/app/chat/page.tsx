@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { MdOutlineArrowBackIos, MdArrowCircleUp } from "react-icons/md";
 import { AiOutlineRobot, AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -18,9 +18,6 @@ interface Message {
 }
 
 export default function Chat() {
-  // load the next-auth session
-  const { data: session } = useSession();
-
   // define some state hooks we'll use later
   // an array of messages
   const [messages, setMessages] = useState([] as Message[]);
@@ -29,13 +26,17 @@ export default function Chat() {
   // whether the page is still loading the message history from the server
   const [isLoading, setIsLoading] = useState(true);
 
+  //=================== Functionality 1 ===================
   // scroll to the bottom of the chat box whenever the "messages" state changes
   const chatBox = useRef<HTMLDivElement>(null);
   useEffect(() => chatBox.current!.scrollIntoView(false), [messages]);
 
+  //=================== Functionality 2 ===================
   // after the page loads, fetch the recent message history from the server and store it in "messages" state
   const fetchMessages = async () => {
     try {
+      const session = await getSession();
+
       const response = await fetch("http://127.0.0.1:5000/api/chat_history", {
         method: "GET",
         headers: {
@@ -65,6 +66,7 @@ export default function Chat() {
     fetchMessages();
   }, []);
 
+  //=================== Functionality 3 ===================
   // when the user submits a message, send it to the server, get the response, and update the "messages" state
   const {
     register,
@@ -89,8 +91,11 @@ export default function Chat() {
     // set the "isTyping" state to true to display the "AI is typing..." message and disable the submit button
     setIsTyping(true);
 
-    // send the user's message to the server and get the response
     try {
+      // get the the current active session
+      const session = await getSession();
+
+      // send the user's message to the server and get the response
       const response = await fetch("http://127.0.0.1:5000/api/chat", {
         method: "POST",
         headers: {
@@ -121,7 +126,7 @@ export default function Chat() {
       setIsTyping(false);
     }
   };
-
+  //======================================
   return (
     <main className="h-screen flex flex-col md:container md:mx-auto shadow-lg rounded-lg">
       <header className="grid grid-cols-3 content-center bg-primary text-base-100 px-10 py-2">
@@ -186,7 +191,7 @@ export default function Chat() {
         <button
           className="pl-4 py-2"
           type="submit"
-          disabled={isSubmitting || isTyping || !isDirty || !isValid}>
+          disabled={isSubmitting || !isDirty || !isValid || isTyping || isLoading}>
           <MdArrowCircleUp className="text-4xl text-primary" />
         </button>
       </form>

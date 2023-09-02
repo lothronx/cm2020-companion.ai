@@ -2,21 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { signOut, useSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 export default function Settings() {
-  // load the next-auth session
-  const { data: session } = useSession();
-
   // use state to handle the Open API modal
   const [isAPIModalOpen, setIsAPIModalOpen] = useState(false);
-
   // use state to handle the Open API key
   const [apiKey, setApiKey] = useState("");
 
   // handle form submission
   const handleApiKey = async () => {
+    const session = await getSession();
+
     const result = await fetch("http://127.0.0.1:5000/api/settings/openapi", {
       method: "POST",
       headers: {
