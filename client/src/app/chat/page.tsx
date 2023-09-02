@@ -135,7 +135,7 @@ export default function Chat() {
         </Link>
         <div className="flex flex-col items-center">
           <AiOutlineRobot className="text-5xl" />
-          <p className="mx-1">Compaion.ai</p>
+          <p className="mx-1">companion.ai</p>
         </div>
       </header>
 
