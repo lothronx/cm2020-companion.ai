@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "very_unique_key"
 app.config["JWT_SECRET_KEY"] = "supersecret_123"  # Change this!
-
+app.config["JWT_TOKEN_LOCATION"] = ['headers', 'query_string']
 
 CORS(app, resources={r"*": {"origins": "*"}})
 jwt = JWTManager(app)
@@ -180,7 +180,7 @@ def get_chat_history():
         for message in messages
         if message.get("message_id") != 0  # Exclude messages with id: 0
     ]
-    
+
 
     return jsonify(formatted_messages), 200
 
