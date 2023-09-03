@@ -128,73 +128,75 @@ export default function Chat() {
   };
   //======================================
   return (
-    <main className="h-screen flex flex-col md:container md:mx-auto shadow-lg rounded-lg">
-      <header className="grid grid-cols-3 content-center bg-primary text-base-100 px-10 py-2">
-        <Link href="/settings" className="justify-self-start grid content-center">
-          <MdOutlineArrowBackIos className="text-3xl" />
-        </Link>
-        <div className="flex flex-col items-center">
-          <AiOutlineRobot className="text-5xl" />
-          <p className="mx-1">companion.ai</p>
-        </div>
-      </header>
-
-      <section className="grow bg-base-100 w-full h-full px-4 overflow-auto">
-        <div className="flex flex-col" ref={chatBox}>
-          <header className="text-center text-xs text-primary my-3">
-            Companion.ai is powered by OpenAI. <br />
-            Everything AI says is not real.
-          </header>
-          {isLoading && (
-            <AiOutlineLoading3Quarters className="self-center text-2xl text-primary mt-10" />
-          )}
-          <ul>
-            {messages.map((message) => (
-              <li key={message.id} className="w-full space-y-1.5 grid grid-cols-6 py-2">
-                <p
-                  className={`text-s break-words rounded-xl border border-dashed border-primary px-4 py-2
-                   ${
-                     message.role == "user"
-                       ? "text-primary bg-base-100 col-start-2 col-end-7 justify-self-end"
-                       : "bg-primary text-base-100 col-start-1 col-end-6 justify-self-start"
-                   }`}>
-                  {message.content}
-                </p>
-                {message.emotion && (
-                  <p className="text-xs text-primary text-right col-start-1 col-end-7 pb-1">
-                    Emotion detected: {message.emotion}
+    <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50">
+      <main className="h-screen flex flex-col md:container md:mx-auto shadow-lg rounded-lg">
+        <header className="grid grid-cols-3 content-center bg-primary text-base-100 px-10 py-2 rounded-t-lg bg-gradient-to-r from-purple-500 to-pink-500">
+          <Link href="/settings" className="justify-self-start grid content-center">
+            <MdOutlineArrowBackIos className="text-3xl" />
+          </Link>
+          <div className="flex flex-col items-center">
+            <AiOutlineRobot className="text-5xl" />
+            <p className="mx-1">companion.ai</p>
+          </div>
+        </header>
+  
+        <section className="grow bg-violet-100/30 w-full h-full px-4 overflow-auto">
+          <div className="flex flex-col" ref={chatBox}>
+            <header className="text-center text-xs text-primary my-3">
+              Companion.ai is powered by OpenAI. <br />
+              Everything AI says is not real.
+            </header>
+            {isLoading && (
+              <AiOutlineLoading3Quarters className="self-center text-2xl text-primary mt-10" />
+            )}
+            <ul>
+              {messages.map((message) => (
+                <li key={message.id} className="w-full space-y-1.5 grid grid-cols-6 py-2">
+                  <p
+                    className={`text-s break-words rounded-xl border border-dashed border-primary px-4 py-2
+                     ${
+                       message.role == "user"
+                         ? "text-primary bg-base-100 col-start-2 col-end-7 justify-self-end"
+                         : "bg-primary text-base-100 col-start-1 col-end-6 justify-self-start"
+                     }`}>
+                    {message.content}
                   </p>
-                )}
+                  {message.emotion && (
+                    <p className="text-xs text-primary text-right col-start-1 col-end-7 pb-1">
+                      Emotion detected: {message.emotion}
+                    </p>
+                  )}
+                </li>
+              ))}
+              <li className="text-slate-600 text-xs px-4 py-2 col-start-1 col-end-5 justify-self-start">
+                {isTyping && "AI is typing..."}
               </li>
-            ))}
-            <li className="text-slate-600 text-xs px-4 py-2 col-start-1 col-end-5 justify-self-start">
-              {isTyping && "AI is typing..."}
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <form
-        className="flex w-full py-2 px-4"
-        onSubmit={handleSubmit((data) => {
-          onSubmit(data);
-          reset();
-        })}>
-        <input
-          className="w-full h-full rounded px-4 py-6 text-sm"
-          {...register("content")}
-          type="text"
-          name="content"
-          id="content"
-          placeholder="Type your message here..."
-        />
-        <button
-          className="pl-4 py-2"
-          type="submit"
-          disabled={isSubmitting || !isDirty || !isValid || isTyping || isLoading}>
-          <MdArrowCircleUp className="text-4xl text-primary" />
-        </button>
-      </form>
-    </main>
+            </ul>
+          </div>
+        </section>
+  
+        <form
+          className="flex w-full py-2 px-4 rounded-b-lg bg-gradient-to-r from-purple-500 to-pink-500"
+          onSubmit={handleSubmit((data) => {
+            onSubmit(data);
+            reset();
+          })}>
+          <input
+            className="w-full h-full input-bordered input-primary rounded px-4 py-6 text-sm"
+            {...register("content")}
+            type="text"
+            name="content"
+            id="content"
+            placeholder="Type your message here..."
+          />
+          <button
+            className="pl-4 py-2"
+            type="submit"
+            disabled={isSubmitting || !isDirty || !isValid || isTyping || isLoading}>
+            <MdArrowCircleUp className="text-4xl text-primary" />
+          </button>
+        </form>
+      </main>
+    </div>
   );
 }
