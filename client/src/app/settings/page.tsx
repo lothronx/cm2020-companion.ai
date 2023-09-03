@@ -33,70 +33,80 @@ export default function Settings() {
   };
 
   return (
-    <div className=" h-screen flex flex-col md:container md:mx-auto shadow-lg rounded-lg p-10">
-      <header className="navbar bg-base-100 flex justify-between">
-        <h1 className="text-primary font-bold text-4xl">Settings</h1>
-        <Link href="/chat">
-          <MdOutlineArrowForwardIos className="text-3xl" />
-        </Link>
-      </header>
-
-      <main className="h-full flex flex-col justify-center items-center">
-        <ul>
-          <li>
-            <button
-              className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
-              onClick={() => setIsAPIModalOpen(true)}>
-              OpenAI API
-            </button>
-          </li>
-          <li>
-            <button className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg">
-              Documentation
-            </button>
-          </li>
-          <li>
-            <Link
-              className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
-              href="mailto:companionai@gmail.com">
-              Contact Us
-            </Link>
-          </li>
-          <li>
-            <button
-              className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
-              onClick={() => signOut({ callbackUrl: "http://localhost:3000/" })}>
-              Sign out
-            </button>
-          </li>
-        </ul>
-      </main>
-
-      <footer className="flex flex-col justify-center footer-center text-xs">
-        Companion.ai is powered by OpenAI. <br />
-        Everything AI says is not real.
-      </footer>
-
-      {/* The Open API Modal*/}
-      {isAPIModalOpen && (
-        <div>
-          <div>
-            <input
-              type="text"
-              placeholder="Enter your OpenAI API key here"
-              value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
-            />
-            <button onClick={handleApiKey}>Submit</button>
-            <button
-              onClick={() => {
-                setIsAPIModalOpen(false);
-              }}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+    <div className=" bg-gradient-to-r from-purple-500/50 to-pink-500/50">
+      <div className="h-screen flex flex-col md:container md:mx-auto shadow-lg rounded-lg p-10 bg-gradient-to-r from-purple-500 to-pink-500">
+        <header className="navbar flex justify-between">
+          <h1 className="text-white font-bold text-4xl">Settings</h1>
+          <Link href="/chat">
+            <MdOutlineArrowForwardIos className="text-5xl text-white" />
+          </Link>
+        </header>
+  
+        <main className="h-full flex flex-col justify-center items-center">
+          <ul>
+            <li>
+              <button
+                className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
+                onClick={() => setIsAPIModalOpen(true)}>
+                OpenAI API
+              </button>
+            </li>
+  
+            {/* The Open API Modal*/}
+            {isAPIModalOpen && (
+              <div className=" my-3 cotainer shadow-lg bg-base-100/50 rounded-lg px-2 py-2">
+                <div>
+                  <input
+                    className="input input-bordered sm:input-xs md:input-sm w-full "
+                    type="text"
+                    placeholder="Enter your OpenAI API key here"
+                    value={apiKey}
+                    onChange={(event) => setApiKey(event.target.value)}
+                  />
+                </div>
+                
+                <div className="grid grid-flow-row-dense grid-cols-2 place-items-center gap-1 ">
+                  <button 
+                    className=" btnS btn-accent sm:btn-sm md:btn-md lg:btn-lg font-bold "
+                    onClick={handleApiKey}>Submit</button>
+                  <button
+                    className=" btnS btn-accent sm:btn-sm md:btn-md lg:btn-lg font-bold "
+                    onClick={() => {
+                      setIsAPIModalOpen(false);
+                    }}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            <li>
+              <button className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg">
+                Documentation
+              </button>
+            </li>
+            <li>
+              <Link
+                className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
+                href="mailto:companionai@gmail.com">
+                Contact Us
+              </Link>
+            </li>
+            <li>
+              <button
+                className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
+                onClick={() => signOut({ callbackUrl: "http://localhost:3000/" })}>
+                Sign out
+              </button>
+            </li>
+          </ul>
+        </main>
+  
+        <footer className="flex flex-col justify-center footer-center text-xs font-semibold">
+          Companion.ai is powered by OpenAI. <br />
+          Everything AI says is not real.
+        </footer>
+      </div>
     </div>
   );
 }
