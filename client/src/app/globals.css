@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 .btn {
-  @apply rounded-full;
   width: 35vw;
   padding: 1vw;
   margin-bottom: 0.5vh;
@@ -11,4 +10,12 @@
   margin-left: 0.5vh;
   margin-right: 0.5vh;
   border-radius: 20px;
+}
+
+.btnS {
+  width: 17vw;
+  padding: 0.5vw;
+  margin-bottom: 1vh;
+  margin-top: 1vh;
+  border-radius: 10px;
 }
