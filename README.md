@@ -28,12 +28,14 @@ Users will receive an emoji that represents the emotion of the text they just su
 
 ### Backend:
 
-1. Open a terminal and go to the server directory:
+1. Download [this dataset](https://www.kaggle.com/datasets/watts2/glove6b50dtxt?resource=download) and store the downloaded glove.6B.50d.txt file in /server/emojify/data.
+
+2. Open a terminal and go to the server directory:
 ```bash
 cd server
 ```
 
-2. Create a python virtual environment:
+3. Create a python virtual environment:
 
 For Mac: 
 ```bash
@@ -48,12 +50,12 @@ venv\Scripts\activate
 ```
 Please double check and make sure you are using the python virtual environment before proceeding.
 
-3. Install the dependencies:
+4. Install the dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Run the server:
+5. Run the server:
 ```bash
 python main.py
 ```
