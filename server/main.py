@@ -7,6 +7,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 import json
+import re
 from mongodbsetup import login, insert_user, get_messages, latest_assistant_message, latest_user_message
 from chatgptapi import CustomChatGPT
 
@@ -212,21 +213,25 @@ def chat_with_ai():
     latest_user_msg = latest_user_message(current_user)
 
     # Structure the assistant response
+    assistant_msg = re.sub('[^a-zA-Z ]+', '', latest_assistant_msg.get("message_content", "default_value"))
+    assistant_emoji = emoji_client.emojify(assistant_msg) if len(assistant_msg.split(" ")) <= 10 else -1
     assistant_response = {
             "id": latest_assistant_msg.get("message_id", None),
-            "content": latest_assistant_msg.get("message_content", "default_value"),
+            "content": assistant_msg,
             "role": latest_assistant_msg.get("sender", "default_value"),
             "timestamp": latest_assistant_msg.get("timestamp", None),
-            "emotion": ""
+            "emotion": assistant_emoji
     }
 
     # Structure the user response
+    user_msg = re.sub('[^a-zA-Z ]+', '', latest_user_msg.get("message_content", "default_value"))
+    user_emoji = emoji_client.emojify(user_msg)  if len(user_msg.split(" ")) <= 10 else -1
     user_response = {
             "id": latest_user_msg.get("message_id", None),
-            "content": latest_user_msg.get("message_content", "default_value"),
+            "content": user_msg,
             "role": latest_user_msg.get("sender", "default_value"),
             "timestamp": latest_user_msg.get("timestamp", None),
-            "emotion": ""
+            "emotion": user_emoji
     }
 
     # Combine both responses
@@ -235,7 +240,7 @@ def chat_with_ai():
         assistant_response
     ]
 
-    return jsonify(response), 200
+    return json.dumps(response, default=str), 200
 
 
 if __name__ == "__main__":
