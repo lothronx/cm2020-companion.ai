@@ -25,17 +25,6 @@ CORS(app, resources={r"*": {"origins": "*"}})
 jwt = JWTManager(app)
 
 emoji_client = Emoji()
-# @app.route("/", methods=['GET'])
-# def home():
-#     return render_template('index.html')
-
-
-# @app.route("/chat", methods=['GET', 'POST'])
-# def chat():
-#     question = request.args['question']
-#     comp = Companion()
-#     response = comp.ask_question(question)
-#     return render_template("index.html", result=response)
 
 
 @app.route("/api/emojify", methods=['GET', 'POST'])
@@ -45,31 +34,6 @@ def emojify():
     ret = emoji_client.emojify(statement)
     return json.dumps([{"emoji": ret}], default=str), 200
 
-
-#Create User
-# @app.route("/api/new_user", methods=["POST"])
-# def create_user_route():
-#     data = request.get_json()
-
-#     username = data["username"]
-#     email = data["email"]
-#     password = data["password"]
-
-#     # Insert the user into the database
-#     user_id = insert_user(username, email, password)
-
-#     if user_id:
-#         return (
-#             jsonify({"message": "User created successfully!", "user_id": str(user_id)}),
-#             201,
-#         )
-#     else:
-#         return (
-#             jsonify(
-#                 {"message": "Unable to register. Username or email already exists."}
-#             ),
-#             400,
-#         )
 
 @app.route("/api/new_user", methods=["POST"])
 def create_user_route():
@@ -214,13 +178,12 @@ def chat_with_ai():
 
     # Structure the assistant response
     assistant_msg = re.sub('[^a-zA-Z ]+', '', latest_assistant_msg.get("message_content", "default_value"))
-    assistant_emoji = emoji_client.emojify(assistant_msg) if len(assistant_msg.split(" ")) <= 10 else -1
     assistant_response = {
             "id": latest_assistant_msg.get("message_id", None),
             "content": assistant_msg,
             "role": latest_assistant_msg.get("sender", "default_value"),
             "timestamp": latest_assistant_msg.get("timestamp", None),
-            "emotion": assistant_emoji
+            "emotion": ""
     }
 
     # Structure the user response
