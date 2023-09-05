@@ -6,11 +6,11 @@ from flask_jwt_extended import (
     create_access_token,
     get_jwt_identity,
 )
-
+import json
 from mongodbsetup import login, insert_user, get_messages, latest_assistant_message, latest_user_message
 from chatgptapi import CustomChatGPT
 
-# from emojify2 import Emoji
+from emojify2 import Emoji
 
 
 # __name__ is equal to app.py
@@ -23,7 +23,7 @@ app.config["JWT_TOKEN_LOCATION"] = ['headers', 'query_string']
 CORS(app, resources={r"*": {"origins": "*"}})
 jwt = JWTManager(app)
 
-# emoji_client = Emoji()
+emoji_client = Emoji()
 # @app.route("/", methods=['GET'])
 # def home():
 #     return render_template('index.html')
@@ -37,12 +37,12 @@ jwt = JWTManager(app)
 #     return render_template("index.html", result=response)
 
 
-# @app.route("/emojify", methods=['GET', 'POST'])
-# def emojify():
-#     statement = request.args['statement']
-#     print('emojifying: {}'.format(statement))
-#     ret = emoji_client.emojify(statement)
-#     return render_template("index.html", result=ret)
+@app.route("/api/emojify", methods=['GET', 'POST'])
+def emojify():
+    statement = request.args['statement'].replace('"', '')
+    print(statement)
+    ret = emoji_client.emojify(statement)
+    return json.dumps([{"emoji": ret}], default=str), 200
 
 
 #Create User
