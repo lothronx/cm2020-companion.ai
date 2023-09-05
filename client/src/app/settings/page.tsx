@@ -54,7 +54,7 @@ export default function Settings() {
   
             {/* The Open API Modal*/}
             {isAPIModalOpen && (
-              <div className=" my-3 cotainer shadow-lg bg-base-100/50 rounded-lg px-2 py-2">
+              <div className=" my-3 container shadow-lg bg-base-100/50 rounded-lg px-2 py-2">
                 <div>
                   <input
                     className="input input-bordered sm:input-xs md:input-sm w-full "

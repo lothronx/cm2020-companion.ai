@@ -14,13 +14,17 @@ cd server
 ```
 
 Create a python virtual environment:
+
+For Mac: 
 ```bash
 virtualenv -p python3.9 env
-For window: py -3 -m venv venv
-```
-```bash
 source env/bin/activate
-For window: venv\Scripts\activate
+```
+
+For Windows: 
+```bash
+py -3 -m venv venv
+venv\Scripts\activate
 ```
 Please double check and make sure you are using the python virtual environment before proceeding.
 
