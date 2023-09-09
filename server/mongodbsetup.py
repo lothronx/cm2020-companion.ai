@@ -8,15 +8,18 @@ import bcrypt
 from bson.objectid import ObjectId
 
 
-# Replace with your MongoDB Atlas connection string
+# MongoDB URI connection string; this is essential for connecting to the MongoDB Atlas cloud database.
 MONGO_URI = "mongodb+srv://databasemain:123@asp-project.xy7kyod.mongodb.net/?retryWrites=true&w=majority"
 
+# Establishing a connection to the MongoDB client using the provided URI.
 client = pymongo.MongoClient(MONGO_URI)
 
+# Selecting the 'chat_app' database within the MongoDB instance.
 db = client['chat_app']
 
 
 def test_connection():
+     # Tests the connection to the MongoDB instance.  A successful ping indicates an active connection. 
     try:
         client.admin.command('ping')
         print("Pinged your deployment. You successfully connected to MongoDB!")
@@ -27,6 +30,8 @@ def test_connection():
 
 
 ## Functions Relating to User Database 
+
+   #Inserts a new user into the 'users' collection. Passwords are hashed using bcrypt for security.
 def insert_user(username, email, password):  # Note the change in parameter name
     users = db['users']
     # Hash the password
@@ -38,12 +43,14 @@ def insert_user(username, email, password):  # Note the change in parameter name
             'password': hashed_password.decode('utf-8')  # Store the hashed password as a string
         })
         return result.inserted_id
+        # If the username or email already exists in the database, notify the caller.
     except DuplicateKeyError:
         print("Username or email already exists!")
         return None
     
 
 def login(email, password):
+    # Authenticates a user based on their email and password. Returns a tuple indicating success, user ID, and username.
     users = db['users']
     user = users.find_one({'email': email})
     if user:
@@ -73,48 +80,6 @@ def delete_user(user_id):
 def fetch_user(criteria):
     users = db['users']
     return users.find_one(criteria)
-
-
-
-## Functions Relating Companion Database 
-
-def create_companion(user_id,companion_name, friendliness, humor_level, specific_interests):
-
-    # companion_id = str(uuid.uuid4())  # Generate a unique companion_id
-
-    chat_settings = db['companion_settings']
-    chat_settings.insert_one({
-        'user_id': user_id,
-        'companion_name': companion_name,
-        'friendliness': friendliness,
-        'humor_level': humor_level,
-        'specific_interests': specific_interests
-    }
-    )
-
-    return companion_name
-
-
-#T0-DO ( add _id to Identify for that Indivual)
-def list_all_companion_names():
-    companion_settings = db['companion_settings']
-    
-    # Using list comprehension to get all companion names from the collection
-    companion_names = [doc['companion_name'] for doc in companion_settings.find() if 'companion_name' in doc]
-    
-    return companion_names
-
-
-# def get_single_companion_id(user_id):
-#     # Accessing the companion_settings collection
-#     companion_settings = db['companion_settings']
-    
-#     # Querying the collection to find the record with the specified user_id
-#     result = companion_settings.find_one({'user_id':user_id})
-    
-#     if result and 'companion_id' in result:
-#         return str(result['companion_id'])
-#     return None
 
 
 ## Functions Relating Messages Database 
@@ -217,7 +182,7 @@ def get_messages_openai(user_id):
     
 
 def latest_assistant_message(user_id):
-    """Debugging function to print related documents."""
+    """Queries the Database to retrieve the last Ai generated message"""
     messages = db['messages']
 
     # Print total number of messages for this user_id
@@ -241,7 +206,7 @@ def latest_assistant_message(user_id):
     return None
 
 def latest_user_message(user_id):
-    """Debugging function to print related documents."""
+    """Queries the Database to retrieve the last user message"""
     messages = db['messages']
 
     # Print total number of messages for this user_id
@@ -268,13 +233,3 @@ def latest_user_message(user_id):
 if __name__ == "__main__":
     # This code only runs if you execute this file directly, not if you import it
     test_connection()
-    # user_messages = get_messages("64de65ab40faf2488003dbbf", "fe7aca8c-8a00-42a2-9ee1-7fdc14fdfa2c")
-    # print(user_messages)
-    # companion_id = get_single_companion_id("64da004e1f9ef2cc5a24a7e8")
-    # print(companion_id)
-    # get_latest_assistant_message("64efae2687ca601b23289129")
-   
-
-
-    # Call the debug function
-    # debug_latest_assistant_message("64de769fa8b4379871d54091")
