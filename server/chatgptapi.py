@@ -36,7 +36,7 @@ else:
 
 ## With Multiple Companions 
 
-def CustomChatGPT(user_id,  user_input):
+def CustomChatGPT(user_id, user_input):
     # Add user's message to the database
     insert_user_message(user_id, user_input)
 

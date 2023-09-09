@@ -8,7 +8,7 @@ from flask_jwt_extended import (
 )
 import json
 import re
-from mongodbsetup import login, insert_user, get_messages, latest_assistant_message, latest_user_message
+from mongodbsetup import login, insert_user, get_messages, latest_assistant_message, latest_user_message, update_user_message_emotion
 from chatgptapi import CustomChatGPT
 
 from emojify2 import Emoji
@@ -142,7 +142,7 @@ def get_chat_history():
             "content": message.get("message_content", "default_value"),
             "role": message.get("sender", "default_value"),
             "timestamp": message.get("timestamp", None),
-            "emotion": ""
+            "emotion": message.get("emotion", None)
         }
         for message in messages
         if message.get("message_id") != 0  # Exclude messages with id: 0
@@ -183,12 +183,15 @@ def chat_with_ai():
             "content": assistant_msg,
             "role": latest_assistant_msg.get("sender", "default_value"),
             "timestamp": latest_assistant_msg.get("timestamp", None),
-            "emotion": ""
+            # "emotion": ""
     }
 
     # Structure the user response
     user_msg = re.sub('[^a-zA-Z ]+', '', latest_user_msg.get("message_content", "default_value"))
-    user_emoji = emoji_client.emojify(user_msg)  if len(user_msg.split(" ")) <= 10 else -1
+    user_emoji = int(emoji_client.emojify(user_msg)  if len(user_msg.split(" ")) <= 10 else -1)
+
+    update_user_message_emotion(current_user, user_emoji)
+
     user_response = {
             "id": latest_user_msg.get("message_id", None),
             "content": user_msg,

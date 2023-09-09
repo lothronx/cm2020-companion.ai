@@ -154,11 +154,25 @@ def insert_user_message(user_id, message_content):
         'message_id': get_next_message_id(user_id),
         'sender': 'user',
         'timestamp': current_timestamp(),
-        'message_content': message_content
+        'message_content': message_content,
+        
     }
     return messages.insert_one(message_data).inserted_id
 
+def update_user_message_emotion(user_id, emotion):
+    """Update the latest user message with its corresponding emoji representation."""
+    messages = db['messages']
+    
+    # Fetch the latest user message
+    latest_message = messages.find({
+        'user_id': user_id,
+        'sender': 'user'
+    }).sort('timestamp', pymongo.DESCENDING).limit(1).next()  # Get the latest message document
 
+    # Update the latest user message with the provided emotion
+    result = messages.update_one({'_id': latest_message['_id']}, {'$set': {'emotion': emotion}})
+    
+    return result.modified_count  # Returns the number of documents modified (should be 1 if successful)
 
 def get_messages(user_id):
     """Retrieve all messages for a specific user_id."""
