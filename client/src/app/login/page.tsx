@@ -57,7 +57,7 @@ export default function Login() {
       <h1 className="text-primary font-bold text-4xl mb-5">Welcome back to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
-          <label className="font-semibold" htmlFor="email">Email</label>
+          <label className="font-semibold text-lg text-blue-900" htmlFor="email">Email</label>
           <input
             className="input input-bordered input-primary input-xs max-w-xs"
             {...register("email")}
@@ -68,7 +68,7 @@ export default function Login() {
           {errors.email && <p className=" text-xs col-span-2 text-blue-800">{errors.email.message}</p>}
         </div>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
-          <label className="font-semibold" htmlFor="password">Password</label>
+          <label className="font-semibold text-lg text-blue-900" htmlFor="password">Password</label>
           <input
             className="input input-bordered input-primary input-xs max-w-xs"
             {...register("password")}
