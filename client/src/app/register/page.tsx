@@ -81,7 +81,7 @@ export default function Register() {
       <h1 className="text-primary font-bold text-4xl mb-5">Welcome to Companion.ai</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
-          <label className="font-semibold" htmlFor="username">Username</label>
+          <label className="font-semibold text-lg text-blue-900" htmlFor="username">Username</label>
           <input
             className="input input-bordered input-primary input-xs max-w-xs"
             {...register("username")}
@@ -92,7 +92,7 @@ export default function Register() {
           {errors.username && <p className=" text-xs col-span-2 text-blue-800">{errors.username.message}</p>}
         </div>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
-          <label className="font-semibold" htmlFor="email">Email</label>
+          <label className="font-semibold text-lg text-blue-900" htmlFor="email">Email</label>
           <input
             className="input input-bordered input-primary input-xs max-w-xs"
             {...register("email")}
@@ -103,7 +103,7 @@ export default function Register() {
           {errors.email && <p className=" text-xs col-span-2 text-blue-800">{errors.email.message}</p>}
         </div>
         <div  className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
-          <label className="font-semibold" htmlFor="password">Password</label>
+          <label className="font-semibold text-lg text-blue-900" htmlFor="password">Password</label>
           <input
             className="input input-bordered input-primary input-xs max-w-xs"
             {...register("password")}
@@ -114,7 +114,7 @@ export default function Register() {
           {errors.password && <p className=" text-xs col-span-2 text-blue-800">{errors.password.message}</p>}
         </div>
         <div className="grid grid-flow-row-dense grid-cols-2 grid-rows-2">
-          <label className="font-semibold" htmlFor="confirmPassword">Confirm Password</label>
+          <label className="font-semibold text-lg text-blue-900" htmlFor="confirmPassword">Confirm Password</label>
           <input
             className="input input-bordered input-primary input-xs max-w-xs"
             {...register("confirmPassword")}
