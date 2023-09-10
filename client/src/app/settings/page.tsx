@@ -36,9 +36,9 @@ export default function Settings() {
     <div className=" bg-gradient-to-r from-purple-500/50 to-pink-500/50">
       <div className="h-screen flex flex-col md:container md:mx-auto shadow-lg rounded-lg p-10 bg-gradient-to-r from-purple-500 to-pink-500">
         <header className="navbar flex justify-between">
-          <h1 className="text-white font-bold text-4xl">Settings</h1>
+          <h1 className="text-primary font-bold text-4xl">Settings</h1>
           <Link href="/chat">
-            <MdOutlineArrowForwardIos className="text-5xl text-white" />
+            <MdOutlineArrowForwardIos className="text-5xl text-primary" />
           </Link>
         </header>
   
@@ -102,7 +102,7 @@ export default function Settings() {
           </ul>
         </main>
   
-        <footer className="flex flex-col justify-center footer-center text-xs font-semibold">
+        <footer className="flex flex-col justify-center footer-center text-base font-semibold">
           Companion.ai is powered by OpenAI. <br />
           Everything AI says is not real.
         </footer>
