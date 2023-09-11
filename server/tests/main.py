@@ -89,5 +89,4 @@ class TestChatGpt(unittest.TestCase):
 
 if __name__ == '__main__':
     main(module='test_module', exit=False)
-    print('testing from main')
     unittest.main()

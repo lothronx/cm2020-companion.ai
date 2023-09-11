@@ -35,7 +35,7 @@ app.config["JWT_SECRET_KEY"] = "supersecret_123"  # Change this!
 
 # Specify where the JWT will be included in requests. Can be headers or query strings.
 app.config["JWT_TOKEN_LOCATION"] = ['headers', 'query_string']
-
+app.testing = True
 # Enable CORS for all routes and origins
 CORS(app, resources={r"*": {"origins": "*"}})
 
@@ -55,7 +55,8 @@ def emojify():
     return json.dumps([{"emoji": ret}], default=str), 200
 
 # API Endpoint: Register a new user
-# This route creates a new user by taking their username, email, and password.@app.route("/api/new_user", methods=["POST"])
+# This route creates a new user by taking their username, email, and password.
+@app.route("/api/new_user", methods=["POST"])
 def create_user_route():
     data = request.get_json()
 

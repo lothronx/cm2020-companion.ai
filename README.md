@@ -88,6 +88,12 @@ run the following to run unit tests of sentiment analysis emoji service, chatgpt
 ```bash
 python -m unittest tests.main
 ```
+for integration test run
+
+
+```bash
+python -m unittest tests.integration
+```
 
 
 ## How to use the project
