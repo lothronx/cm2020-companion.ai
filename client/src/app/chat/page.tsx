@@ -14,7 +14,7 @@ interface Message {
   content: string;
   role: string;
   timestamp: string;
-  emotion: string;
+  emotion: number;
 }
 
 export default function Chat() {
@@ -84,7 +84,7 @@ export default function Chat() {
         content: data.content,
         role: "user",
         timestamp: "",
-        emotion: "",
+        emotion: -1,
       },
     ]);
 
@@ -126,6 +126,26 @@ export default function Chat() {
       setIsTyping(false);
     }
   };
+
+  //=================== Functionality 4 ===================
+  // translate the emotion from numbers to emojis
+  const toEmoji = (emotion: number) => {
+    switch (emotion) {
+      case 0:
+        return "💜";
+      case 1:
+        return "⚾️";
+      case 2:
+        return "😄";
+      case 3:
+        return "😞";
+      case 4:
+        return "🍴";
+      default:
+        return "";
+    }
+  };
+
   //======================================
   return (
     <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50">
@@ -139,7 +159,7 @@ export default function Chat() {
             <p className="mx-1 font-medium  text-primary">companion.ai</p>
           </div>
         </header>
-  
+
         <section className="grow bg-violet-100/30 w-full h-full px-4 overflow-auto">
           <div className="flex flex-col" ref={chatBox}>
             <header className="text-center text-xs text-blue-900 my-3">
@@ -161,9 +181,9 @@ export default function Chat() {
                      }`}>
                     {message.content}
                   </p>
-                  {message.emotion && (
+                  {message.emotion != null && message.emotion != -1 && (
                     <p className="text-xs text-primary text-right col-start-1 col-end-7 pb-1">
-                      Emotion detected: {message.emotion}
+                      Emotion detected: {toEmoji(message.emotion)}
                     </p>
                   )}
                 </li>
@@ -174,7 +194,7 @@ export default function Chat() {
             </ul>
           </div>
         </section>
-  
+
         <form
           className="flex w-full py-2 px-4 rounded-b-lg bg-gradient-to-r from-purple-500 to-pink-500"
           onSubmit={handleSubmit((data) => {
