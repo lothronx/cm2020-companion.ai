@@ -37,13 +37,13 @@ cd server
 
 3. Create a python virtual environment:
 
-For Mac: 
+For Mac:
 ```bash
 virtualenv -p python3.9 env
 source env/bin/activate
 ```
 
-For Windows: 
+For Windows:
 ```bash
 py -3 -m venv venv
 venv\Scripts\activate
@@ -81,6 +81,15 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+
+## unit tests
+run the following to run unit tests of sentiment analysis emoji service, chatgpt, and database.
+
+```bash
+python -m unittest tests.main
+```
+
+
 ## How to use the project
 
 ### Landing Page
@@ -98,14 +107,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Companion.ai uses the following technologies:
 
 1. React.js: A JavaScript library for building user interfaces.
-   
-2. Next.js: A React framework for production.
-   
-3. Flask: A Python framework for building web applications.
-   
-4. MongoDB: A document-oriented database program.
-   
-5. GPT-3.5: A powerful language model that produces text that resembles human language.
-    
-6. Emojify: A Python library that converts text to emojis.
 
+2. Next.js: A React framework for production.
+
+3. Flask: A Python framework for building web applications.
+
+4. MongoDB: A document-oriented database program.
+
+5. GPT-3.5: A powerful language model that produces text that resembles human language.
+
+6. Emojify: A Python library that converts text to emojis.
