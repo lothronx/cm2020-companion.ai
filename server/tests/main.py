@@ -1,8 +1,7 @@
 import unittest
 from unittest import main
 from emojify2 import Emoji
-from mongodbsetup import (insert_user, login, create_companion, insert_user_message,
-                          insert_ai_message, get_messages)
+from mongodbsetup import (insert_user, login, insert_ai_message, get_messages)
 from chatgptapi import CustomChatGPT
 
 
@@ -19,15 +18,15 @@ class TestEmoji(unittest.TestCase):
 
     def test_disappointment(self):
         emoji = Emoji()
-        analysis = emoji.emojify('today was a bad day')
+        analysis = emoji.emojify('was a bad day')
         self.assertEqual(analysis, 3)
 
-    def test_disappointment(self):
+    def test_food(self):
         emoji = Emoji()
         analysis = emoji.emojify('food was good')
         self.assertEqual(analysis, 4)
 
-    def test_disappointment(self):
+    def test_baseball(self):
         emoji = Emoji()
         analysis = emoji.emojify('i play baseball')
         self.assertEqual(analysis, 1)
