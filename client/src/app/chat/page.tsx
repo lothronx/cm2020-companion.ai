@@ -17,6 +17,9 @@ interface Message {
   emotion: number;
 }
 
+/**
+ * Chat page
+ */
 export default function Chat() {
   // define some state hooks we'll use later
   // an array of messages
@@ -35,8 +38,10 @@ export default function Chat() {
   // after the page loads, fetch the recent message history from the server and store it in "messages" state
   const fetchMessages = async () => {
     try {
+      // get the current active session
       const session = await getSession();
 
+      // send a request to the server to get the message history
       const response = await fetch("http://127.0.0.1:5000/api/chat_history", {
         method: "GET",
         headers: {
@@ -45,10 +50,11 @@ export default function Chat() {
         },
       });
 
-      const recentMessageHistory: Message[] = await response.json();
+      const messageHistory: Message[] = await response.json();
 
+      // update the "messages" state with the response
       setMessages(
-        recentMessageHistory.map((message) => ({
+        messageHistory.map((message) => ({
           id: message.id,
           content: message.content,
           role: message.role,
@@ -57,17 +63,21 @@ export default function Chat() {
         }))
       );
 
+      // set "isLoading" to false to hide the loading icon
       setIsLoading(false);
     } catch (err) {
       console.error("Error fetching messages:", err);
     }
   };
+
+  // call the fetchMessages function after the page loads
   useEffect(() => {
     fetchMessages();
   }, []);
 
   //=================== Functionality 3 ===================
   // when the user submits a message, send it to the server, get the response, and update the "messages" state
+  // handle form state
   const {
     register,
     handleSubmit,
@@ -128,7 +138,7 @@ export default function Chat() {
   };
 
   //=================== Functionality 4 ===================
-  // translate the emotion from numbers to emojis
+  // translate the emotion from numbers to emojis for frontend display
   const toEmoji = (emotion: number) => {
     switch (emotion) {
       case 0:
@@ -150,6 +160,7 @@ export default function Chat() {
   return (
     <div className="bg-gradient-to-r from-purple-500/50 to-pink-500/50">
       <main className="h-screen flex flex-col md:container md:mx-auto shadow-lg rounded-lg">
+        {/* Header: the link to the settings page, the ai name and avatar */}
         <header className="grid grid-cols-3 content-center bg-primary text-base-100 px-10 py-2 rounded-t-lg bg-gradient-to-r from-purple-500 to-pink-500">
           <Link href="/settings" className="justify-self-start grid content-center">
             <MdOutlineArrowBackIos className="text-3xl  text-primary" />
@@ -160,15 +171,21 @@ export default function Chat() {
           </div>
         </header>
 
+        {/* Chat box: the message history */}
         <section className="grow bg-violet-100/30 w-full h-full px-4 overflow-auto">
           <div className="flex flex-col" ref={chatBox}>
+            {/* The disclaimer */}
             <header className="text-center text-xs text-blue-900 my-3">
               Companion.ai is powered by OpenAI. <br />
               Everything AI says is not real.
             </header>
+
+            {/* The loading icon */}
             {isLoading && (
               <AiOutlineLoading3Quarters className="self-center text-2xl text-primary mt-10" />
             )}
+
+            {/* The message history (a list of messages) */}
             <ul>
               {messages.map((message) => (
                 <li key={message.id} className="w-full space-y-1.5 grid grid-cols-6 py-2">
@@ -188,6 +205,8 @@ export default function Chat() {
                   )}
                 </li>
               ))}
+
+              {/* The "AI is typing..." message */}
               <li className="text-slate-600 text-xs px-4 py-2 col-start-1 col-end-5 justify-self-start">
                 {isTyping && "AI is typing..."}
               </li>
@@ -195,6 +214,7 @@ export default function Chat() {
           </div>
         </section>
 
+        {/* Input box: the message input box */}
         <form
           className="flex w-full py-2 px-4 rounded-b-lg bg-gradient-to-r from-purple-500 to-pink-500"
           onSubmit={handleSubmit((data) => {
@@ -209,10 +229,16 @@ export default function Chat() {
             id="content"
             placeholder="Type your message here..."
           />
+          {/* 
+          The submit button: the button will be disabled when:
+          1. the page is still loading the message history from the server
+          2. the user just submitted a message the system is still processing it
+          3. the submission is empty or dirty 
+          */}
           <button
             className="pl-4 py-2"
             type="submit"
-            disabled={isSubmitting || !isDirty || !isValid || isTyping || isLoading}>
+            disabled={isLoading || isSubmitting || isTyping || !isDirty || !isValid}>
             <MdArrowCircleUp className="text-4xl text-primary" />
           </button>
         </form>
