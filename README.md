@@ -98,8 +98,11 @@ python -m unittest tests.integration
 ![Landing Page](/client/public/home.jpeg)
 
 This is the home page of Companion.ai. You can:
+
 - Click on the "Register" button to create a new account.
+  
 - Click on the "Log in" button to log in to an existing account.
+  
 - Click on the "Help" button to go to the documentation page.
 
 If you have already logged in, you will be auto redirected to the chat page.
@@ -132,6 +135,8 @@ If you have already logged in, you will be auto redirected to the chat page.
 ### Chat Page
 ![Chat Page](/client/public/chat.jpeg)
 
+Only logged in users can access the chat page. If you have not logged in, you will be auto redirected to the login page.
+
 On the chat page, you can chat with our ai.companion, receive kind and friendly responses, and see the emotion of the text you just submitted.
 
 When you first open the chat page, you will see a welcome message from our ai.companion. If you are a returning user, you will also see all your previous conversations with our ai.companion. Chat history is stored in our secure database.
@@ -143,11 +148,18 @@ You can click on the arrow on the top left corner to go to the settings page.
 ### Settings Page
 ![Settings Page](/client/public/settings.jpeg)
 
+Only logged in users can access the settings page. If you have not logged in, you will be auto redirected to the login page.
+
 On the settings page, you can:
+
 - Enter your own OpenAI API key. If you do not have an OpenAI API key, you can use our default API key for testing purposes. Note that the default API key has a limited number of requests per day.
+  
 - Read the documentation of our project.
+  
 - Contact us via email if you have any questions or suggestions.
+  
 - Sign out of your account.
+  
 ## Technologies Used
 
 Companion.ai uses the following technologies:
