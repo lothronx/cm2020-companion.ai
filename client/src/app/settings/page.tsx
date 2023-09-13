@@ -93,9 +93,11 @@ export default function Settings() {
 
             {/* Setting 2: Documentation*/}
             <li>
-              <button className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg">
+              <Link
+                className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
+                href="/documentation">
                 Documentation
-              </button>
+              </Link>
             </li>
 
             {/* Setting 3: Contact Us*/}
@@ -119,7 +121,7 @@ export default function Settings() {
         </main>
 
         {/* Footer: footnote*/}
-        <footer className="flex flex-col justify-center footer-center text-base font-semibold">
+        <footer className="flex flex-col justify-center footer-center text-blue-900">
           Companion.ai is powered by OpenAI. <br />
           Everything AI says is not real.
         </footer>

@@ -29,6 +29,11 @@ export default function Home() {
       <Link className="centered-main btn btn-primary sm:btn-sm md:btn-md lg:btn-lg" href="/login">
         Log in
       </Link>
+      <Link
+        className="centered-main btn text-primary sm:btn-sm md:btn-md lg:btn-lg"
+        href="/documentation">
+        Help
+      </Link>
     </main>
   );
 }

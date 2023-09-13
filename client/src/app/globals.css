@@ -19,3 +19,11 @@
   margin-top: 1vh;
   border-radius: 10px;
 }
+
+iframe {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  border: none;
+
+}
