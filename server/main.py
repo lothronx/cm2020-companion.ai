@@ -118,7 +118,6 @@ def login_route():
 
     # At this point, the user is authenticated
     # session["user_id"] = user_id  # Storing user_id in session
-
     # If authentication is successful, generate a JWT access token for the user
     access_token = create_access_token(identity=user_id)
 

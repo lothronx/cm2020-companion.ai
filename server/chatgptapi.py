@@ -13,10 +13,10 @@ def validate_connection(api_key):
     Tests the connection to the OpenAI API.
     Returns True if the connection is successful, otherwise returns False.
     """
-    
+
     # Set the OpenAI API key.
     openai.api_key = api_key
-    
+
     try:
         # Make a sample request to the OpenAI API to test the connection.
         response = openai.Completion.create(
@@ -24,13 +24,13 @@ def validate_connection(api_key):
             prompt="test",
             max_tokens=5
         )
-        
+
         # Check if the response contains expected data.
         if response and response.get("choices"):
             return True
         else:
             return False
-            
+
     except Exception as e:
         # If there's an error during the request, print it.
         print(f"Error: {e}")
@@ -47,7 +47,7 @@ def CustomChatGPT(user_id, user_input):
     Engages in a conversation with the ChatGPT model.
     The function first logs the user's message and then gets a reply from ChatGPT.
     """
-    
+
     # Store the user's message in the database.
     insert_user_message(user_id, user_input)
 
