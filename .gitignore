@@ -28,3 +28,4 @@ yarn-error.log*
 venv
 __pycache__
 /data
+log.txt

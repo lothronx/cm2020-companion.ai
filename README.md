@@ -55,7 +55,17 @@ For Mac:
 ```bash
 virtualenv -p python3.9 env
 source env/bin/activate
+which python
 ```
+Copy the path, which should be `[... path to]/server/env/bin/python`. 
+
+shift+command+P to open the command palette
+
+Type "Python: Select Interpreter" and select it.
+
+Click "+ Enter interpreter path..."
+
+Paste the path you just copied and press enter.
 
 For Windows:
 ```bash
@@ -64,12 +74,12 @@ venv\Scripts\activate
 ```
 Please double check and make sure you are using the python virtual environment before proceeding.
 
-4. Install the dependencies:
+1. Install the dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-5. Run the server:
+1. Run the server:
 ```bash
 python main.py
 ```
