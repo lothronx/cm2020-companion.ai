@@ -230,6 +230,7 @@ export default function Chat() {
             placeholder="Type your message here..."
           />
           {/* 
+          =================== Functionality 5 ===================
           The submit button: the button will be disabled when:
           1. the page is still loading the message history from the server
           2. the user just submitted a message the system is still processing it
