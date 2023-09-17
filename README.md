@@ -46,32 +46,35 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Backend:
 
-
-1. after installing main repo, execute the following to git pull emoji sentiment analysis repo
+1. Open a new terminal. Git pull emoji sentiment analysis repository.
 
 ``` bash
 git submodule update --init --recursive
 ```
-Download [this dataset](https://www.kaggle.com/datasets/watts2/glove6b50dtxt?resource=download) and store the downloaded glove.6B.50d.txt file in server/emojify/data.
 
+Download [this dataset](https://www.kaggle.com/datasets/watts2/glove6b50dtxt?resource=download) and store the downloaded `glove.6B.50d.txt file` in `/server/emojify/data`.
 
-2. Open a terminal and go to the server directory:
+2. Go to the server directory
 
 ```bash
 cd server
 ```
 
-3. Create a python virtual environment:
+3. Create a python virtual environment
 
-For Mac:
+- For Mac:
 
 ```bash
 virtualenv -p python3.9 env
-source env/bin/activate
-which python
 ```
 
+```bash
+source env/bin/activate
+```
 
+```bash
+which python
+```
 Copy the path, which should be `[... path to]/server/env/bin/python`.
 
 shift+command+P to open the command palette
@@ -82,26 +85,31 @@ Click "+ Enter interpreter path..."
 
 Paste the path you just copied and press enter.
 
-For Windows:
+- For Windows:
 
 ```bash
 py -3 -m venv venv
+```
+
+```bash
 venv\Scripts\activate
 ```
 
 Please double check and make sure you are using the python virtual environment before proceeding.
 
-4. Install the dependencies:
+4. Install the dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-5. Run the server:
+5. Run the server
 
 ```bash
 python main.py
 ```
+
+Note that the server might take a while to start up. Please be patient.
 
 Open [http://127.0.0.1:5000/test](http://127.0.0.1:5000/test) with your browser to see the result.
 
