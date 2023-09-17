@@ -46,7 +46,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Backend:
 
-1. Download [this dataset](https://www.kaggle.com/datasets/watts2/glove6b50dtxt?resource=download) and store the downloaded glove.6B.50d.txt file in `/server/emojify/data`.
+
+1. after installing main repo, execute the following to git pull emoji sentiment analysis repo
+
+``` bash
+git submodule update --init --recursive
+```
+Download [this dataset](https://www.kaggle.com/datasets/watts2/glove6b50dtxt?resource=download) and store the downloaded glove.6B.50d.txt file in server/emojify/data.
+
 
 2. Open a terminal and go to the server directory:
 
@@ -63,6 +70,7 @@ virtualenv -p python3.9 env
 source env/bin/activate
 which python
 ```
+
 
 Copy the path, which should be `[... path to]/server/env/bin/python`.
 
